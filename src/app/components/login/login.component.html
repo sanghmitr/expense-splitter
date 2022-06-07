@@ -1,0 +1,138 @@
+<app-header></app-header>
+<!-- <div class="container-fluid">
+    <div class="row mt-5">
+        <div class="col"></div>
+        <div class="col-4">
+            <div class="card shadow">
+                <div class="card-body">
+                    <form>
+                        <div class="mb-3">
+                            <h4 class="text-dark text-muted">Login</h4>
+                        </div>
+                        <div class="mb-3">
+                          <label for="exampleInputEmail1" class="form-label">Email</label>
+                          <input type="email" class="form-control" name="email" [(ngModel)]="email">
+                        </div>
+                        <div class="mb-3">
+                          <label for="exampleInputPassword1" class="form-label">Password</label>
+                          <input type="password" class="form-control" name="password" [(ngModel)]="password">
+                        </div>
+
+                        <div>
+                            <p class="autherror" *ngIf="isAuthenticationError">errorResult</p>
+                        </div>
+
+                        <button type="button" class="btn btn-info" (click)="login()">Login</button>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <a href="/register" style="text-decoration: none;">Need Account ? <span class="text-danger">Register</span></a>
+                            </div>
+                            <div class="col-md-6">
+                                <a href="/forgot-password" class="text-dark" style="text-decoration: none;"> Forgot Password ? </a>
+                            </div>
+                        </div>
+                        
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col"></div>
+    </div>
+</div> -->
+
+
+<div class="container">
+    <form class="form-horizontal">
+        <div class="row">
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
+              <h1 class="login-heading">Login</h1>
+                <hr>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
+                <div class="form-group has-danger">
+                    <label class="sr-only" for="email">E-Mail Address</label>
+                    <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                        <div class="input-group-addon" style="width: 2.6rem"><i class="fa fa-at"></i></div>
+                        <input type="text" name="email" class="form-control" id="email"
+                               placeholder="email" required autofocus [(ngModel)]="email" >
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="col-md-3">
+                <div class="form-control-feedback">
+                    <span class="text-danger align-middle">
+                        <i class="fa fa-close"></i> Example error message
+                    </span>
+                </div>
+            </div> -->
+        </div>
+        <div class="row">
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="sr-only" for="password">Password</label>
+                    <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                        <div class="input-group-addon" style="width: 2.6rem"><i class="fa fa-key"></i></div>
+                        <input type="password" name="password" class="form-control" id="password"
+                               placeholder="Password" required  [(ngModel)]="password">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-control-feedback">
+                    <span class="text-danger align-middle">
+                    <!-- Put password error message here -->    
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3"></div>
+            <div class="col-md-6" style="padding-top: .35rem">
+                <div class="form-check mb-2 mr-sm-2 mb-sm-0">
+                    <label class="form-check-label">
+                        <input class="form-check-input" name="remember"
+                               type="checkbox" >
+                        <span style="padding-bottom: .15rem">Remember me</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        
+        <div class="row" style="padding-top: 1rem">
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
+                <button type="submit" class="btn btn-success" (click)="login()"><i class="fa fa-sign-in"></i> Login</button>
+                <a class="btn btn-link" [routerLink]="['/forgot-password']" routerLinkActive="router-link-active" >Forgot Your Password?</a>
+                <br>
+                <br>
+
+                <p class="muted-text" style="text-align: center;"> OR </p>
+
+                <!-- Google SignIn-->
+                <div class="row mt-2">
+                    <a (click) = "googleSignIn()" style="text-decoration: none;">
+                        <div class="card shadow text-center" style="height: 5rem;">
+                            <div class="card-body">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google Logo" style="width: 30px; height: 50px;">
+                                Sign-In with Google
+                            </div>
+                        </div>
+                    </a>
+                    
+                </div>
+                <!-- <button class="btn btn-secondary" (click)="googleLogin()"> Sign-In with Google</button> -->
+
+                <button class="btn btn-danger" [routerLink]="['/register']" routerLinkActive="router-link-active" >Register</button>
+            </div>
+        </div>
+
+        
+    </form>
+  </div>
+<!-- <app-footer></app-footer> -->
