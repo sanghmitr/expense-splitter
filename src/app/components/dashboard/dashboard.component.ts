@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../shared/auth.service';
 import { Router } from '@angular/router';
-import * as firebase from 'firebase/compat';
+
 import { getAuth } from '@angular/fire/auth';
 import { UserService } from '../../shared/user.service';
 import { User } from 'src/app/models/user';
-import { collectionData } from '@angular/fire/firestore';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { Observable } from 'rxjs';
+
 
 @Component({
   selector: 'app-dashboard',
@@ -17,15 +17,23 @@ export class DashboardComponent implements OnInit {
 
   sideBarOpen = true;
   
-  currentUser$!: Promise<any>;
+  currentUser: any;
+  
+  curUser$!: Observable<User>;
   
   constructor(private authService: AuthService, private router: Router, private userService: UserService) { 
     //this.userService.getUser();
+    
+    //console.log("Inside Constructor : ", this.currentUser);
   }
 
-  ngOnInit(): void {
-    this.getUser();
-    console.log("Inside ngOnInit : ", this.currentUser$);
+  ngOnInit() {
+    if (localStorage.getItem('Token') === null) { 
+      this.router.navigate(['/login']);
+    }
+    this.getUser().then(() => {
+      console.log("Inside Dashboard Oninit : ", this.currentUser);
+    });
   }
 
   sideBarToggler() {
@@ -45,14 +53,11 @@ export class DashboardComponent implements OnInit {
   }
 
   async getUser() {
-    // await this.userService.getUser().then(data => {
-    //   //console.log(data);
-    //   this.currentUser = data;
-    //   return this.currentUser;
-    // });
-    // //console.log("Inside component : ", this.currentUser);
-    
-    this.currentUser$ = this.userService.getUser();
+    await this.userService.getCurrentUser().then(res => { 
+      //console.log(res);
+      this.currentUser = res;
+    });
+    //console.log("Inside Component : ", this.currentUser);
   }
 
 

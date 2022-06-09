@@ -2,10 +2,17 @@
     <div class="profile-card">
         <div class="header">
             <!-- <h2>Admin</h2> -->
-            
+        </div >
+
+        <div *ngIf="currentUser.photoURL === ''; else image_with_URL_available">
+            <img src="https://png.pngtree.com/png-vector/20190301/ourlarge/pngtree-vector-administration-icon-png-image_747092.jpg" alt="User_Image">
         </div>
-        <img src="https://png.pngtree.com/png-vector/20190301/ourlarge/pngtree-vector-administration-icon-png-image_747092.jpg" alt="Admin_Image">
-        <h5>Sanghmitra Tamrakar</h5>
+        
+        <ng-template #image_with_URL_available>
+            <img  [src]= "currentUser.photoURL" alt="user_Image">
+        </ng-template>
+        
+        <h5> {{ currentUser.fullName }}</h5>
     </div>
 
     <mat-divider></mat-divider>
@@ -13,9 +20,9 @@
     <!-- <h2 matSubheader>Pages</h2>  -->
 
     <a mat-list-item routerLinkActive="list-item-active" routerLink="/dashboard">Dashboard</a>
-    <a mat-list-item routerLinkActive="list-item-active" routerLink="/dashboard">Groups</a>
+    <a mat-list-item routerLinkActive="list-item-active" routerLink="groups">Groups</a>
     <a mat-list-item routerLinkActive="list-item-active" routerLink="/dashboard">Expenses</a>
-    <a mat-list-item routerLinkActive="list-item-active" routerLink="/dashboard">Profile</a>
+    <a mat-list-item routerLinkActive="list-item-active" routerLink="profile">Profile</a>
     <!-- <a mat-list-item routerLinkActive="list-item-active" routerLink="contactus">Contact Us</a> -->
     
     <mat-divider></mat-divider>

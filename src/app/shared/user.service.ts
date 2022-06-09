@@ -1,28 +1,32 @@
 import { Injectable } from '@angular/core';
 import { User } from '../models/user';
-import { Router } from '@angular/router';
-import { AngularFirestore} from '@angular/fire/compat/firestore';
-import { observable } from 'rxjs';
+import { Router, Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
+
 
 
 @Injectable({
   providedIn: 'root'
 })
-export class UserService {
-
+export class UserService implements Resolve<any>{
 
   users: User[] = [];
-  currentuser: any;
+  currentuser: User = {} as User;
 
   constructor(private router: Router, public db: AngularFirestore) {
 
   }
+
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+    return this.getCurrentUser();
+  }
+
   
-  //Get current user data from firestore
-  async getAllUser() {    
-    await this.db.collection('users').snapshotChanges().subscribe(res => { 
+  //Get all users data from firestore
+  async getAllUser() {
+    await this.db.collection('users').snapshotChanges().subscribe(res => {
       res.forEach(a => {
-        let item : any = a.payload.doc.data();
+        let item: any = a.payload.doc.data();
         //console.log(item);
         item.id = a.payload.doc.id;
         this.users.push(item);
@@ -38,66 +42,48 @@ export class UserService {
       console.log("UserBalance : ", u.balance);
       console.log("---------------------------------");
     });
-   }
+  }
    
   
   //Get current user data from firestore
-  async getUser() {
+  async getCurrentUser() {
     let item = localStorage.getItem('Token');
     if (item) {
       let localStorageuser = JSON.parse(item);
       let uid = localStorageuser.uid;
       console.log("Local storage uid is : ", uid);
     
-      await this.db.collection('users').doc(uid).snapshotChanges().subscribe(res => {
-        let item: any = res.payload.data();
-        item.id = res.payload.id;
-        console.log(item);
-        this.currentuser = item;
-      });
-      return this.currentuser;
+      return await (await this.db.collection('users').doc(uid).ref.get()).data();
     }
   }
 
-  // getCurrentUser() : any {
+
+
+  // async getMarker(){
   //   let item = localStorage.getItem('Token');
   //   if (item) {
   //     let localStorageuser = JSON.parse(item);
   //     let uid = localStorageuser.uid;
   //     console.log("Local storage uid is : ", uid);
 
-  //     return this.db.collection('users').doc(uid).get().docs().map(doc =>
-  //       console.log(doc.data())
-  //     );
+  //     const snapshot = await this.db.collection('users').doc(uid).ref.get().then((doc) => {
+  //       if (doc.exists) {
+  //         // this.currentuser = doc.data();
+  //         console.log(doc.data());
+  //       }
+  //       else {
+  //         console.log("Data not found");
+  //       }
+        
+  //     }, err => {
+  //       console.log(err);
+  //     });
+  //     return snapshot;
   //   }
   // }
-
-
-  async getMarker(){
-    let item = localStorage.getItem('Token');
-    if (item) {
-      let localStorageuser = JSON.parse(item);
-      let uid = localStorageuser.uid;
-      console.log("Local storage uid is : ", uid);
-
-      const snapshot = await this.db.collection('users').doc(uid).ref.get().then((doc) => {
-        if (doc.exists) {
-          // this.currentuser = doc.data();
-          console.log(doc.data());
-        }
-        else {
-          console.log("Data not found");
-        }
-        
-      }, err => {
-        console.log(err);
-      });
-      return snapshot;
-    }
-  }
   
   getAllTransactions() {
-    this.db.collection('transactions').snapshotChanges().subscribe(res => { 
+    this.db.collection('transactions').snapshotChanges().subscribe(res => {
       res.forEach(a => {
         let item: any = a.payload.doc.data();
         console.log(item);
@@ -105,6 +91,39 @@ export class UserService {
       });
     });
   }
+
+  //Check if user exists in firestore
+  async checkIfUserExists(email: string) { 
+    const snapshot = await this.db.collection('users').ref.where('email', '==', email).get().then((doc) => {
+      if (doc.empty) {
+        console.log("User not found");
+        return false;
+      }
+      else {
+        console.log("User found");
+        return true;
+      }
+    });
+    console.log("Snapshot is : ", snapshot.valueOf.toString());
+    console.log("printing after fetching data")
+  }
+
+
+  async getUserId(email: string) {
+    let userID = '';
+    await this.db.collection('users').ref.where('email', '==', email.toLowerCase()).get().then((doc) => {
+      if (doc.empty) {
+        console.log("User not found");
+      }
+      else {
+        console.log("User found");
+        userID = doc.docs[0].id;
+        doc.forEach(doc => {
+          console.log(doc.id);
+        });
+      }
+    });
+    return userID;
+  }
 }
-  
 

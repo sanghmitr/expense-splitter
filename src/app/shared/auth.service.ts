@@ -40,7 +40,13 @@ export class AuthService {
       }
     })
       .catch(err => {
-        alert(err.message);
+        //alert(err.message);
+        Swal.fire(
+          {
+            title: 'Error',
+            text: 'Invalid Credentials or User does not exist', 
+          }
+        )
         this.errorResult = err.message;
         this.router.navigate(['/login']);
       });
@@ -56,12 +62,14 @@ export class AuthService {
         if(res.user)
         {
           this.userobj.uid = res.user.uid;
-          this.userobj.email = res.user.email == null ? '' : res.user.email;
+          this.userobj.email = res.user.email == null ? '' : res.user.email.toLowerCase();
           this.userobj.fullName = fullname;
           this.userobj.phone = phone;
           this.userobj.photoURL = res.user.photoURL == null ? '' : res.user.photoURL;
           this.userobj.balance = 0;
           this.createUser(this.userobj);
+
+          
         }
         
         this.router.navigate(['/verify-email']);
@@ -81,10 +89,15 @@ export class AuthService {
     return this.errorResult;
   }
   
-  //create user in firestore
+  //create user in firestore, If already exists merge data
   createUser(user: User) { 
     this.firestore.collection('users').doc(user.uid).set(user).then(res => {
       console.log(res);
+    })
+
+    // Add Email Mapping in firestore
+    this.firestore.collection('email-mappings').doc(user.email).set({ uid : user.uid }).then(res => {
+      console.log("Email mapping added",res);
     })
   }
 
@@ -133,6 +146,16 @@ export class AuthService {
     this.fireauth.signInWithPopup(new GoogleAuthProvider()).then(res => {
       this.router.navigate(['dashboard']);
       localStorage.setItem('Token', JSON.stringify(res.user));
+      if(res.user)
+        {
+          this.userobj.uid = res.user.uid;
+          this.userobj.email = res.user.email == null ? '' : res.user.email.toLowerCase();
+          this.userobj.fullName = res.user.displayName == null ? '' : res.user.displayName;
+          this.userobj.phone = '';
+          this.userobj.photoURL = res.user.photoURL == null ? '' : res.user.photoURL;
+          this.userobj.balance = 0;
+          this.createUser(this.userobj);
+        }
       console.log(res.user);
     }, err => {
       if (err.code == 'auth/popup-closed-by-user') {
@@ -146,4 +169,6 @@ export class AuthService {
       }
     })
   }
+
+
 }

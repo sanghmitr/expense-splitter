@@ -1,0 +1,97 @@
+<mat-card>
+    <mat-card-header>
+        <mat-card-title>
+            <h1>Groups</h1>
+        </mat-card-title>
+        <div class="right">
+            <button type="button" class="btn btn-primary" (click) = "openForm()">Create Group</button>
+        </div>
+    </mat-card-header>
+</mat-card>
+
+<mat-divider></mat-divider>
+
+<br>
+
+<div *ngIf="createButtonClicked">
+    <form [formGroup]="form" (submit)="submit(form.value)">
+    <fieldset>
+        <mat-card>
+            <div class="container">
+                <!-- <div class="row">
+                    <div class="col-md-1"></div>
+                        <div class="col-md-3">
+                            <legend>Create Group</legend>
+                            
+                            <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                
+                                <label for="group-title">Group Title</label>
+                                <div class="input-group-addon" style="width: 2.6rem"><i class="fa fa-at"></i></div>
+                                <input type="text" class="form-control" id="group-title" name="group-title" placeholder="(required)" required autofocus formControlName="title">
+                                <br><br>
+                            </div>
+                            
+                        
+                            <label for="group-description">Group Description</label>
+                            <input type="text-area" class="form-control" id="group-description" name="group-description" placeholder="(optional)" formControlName="description">
+                            <br><br>
+                        </div>
+                </div> -->
+                <div class="form-group">
+                    <label > Group Title</label>
+                    <input type="email" class="form-control" placeholder="Enter Title" required formControlName="title" >
+                  </div>
+                
+                <div class="form-group">
+                    <label > Group Description </label>
+                    <input type="email" class="form-control" placeholder="Enter short description" required formControlName="description">
+                  </div>
+            </div>
+        </mat-card>
+        
+      
+    </fieldset>
+  
+    <fieldset>
+    <mat-card>
+    <label>Add members</label>
+      <ng-container formArrayName="members" *ngFor="let member of members.controls; index as i">
+        <ng-container [formGroupName]="i">
+          
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" id="inputGroup-sizing-default" placeholder="Members's registered email" formControlName="memberEmail" aria-label="Members's registered email" aria-describedby="basic-addon2" 
+                (focusout) = "checkIfUserExists($event)" required>
+                <div class="input-group-append">
+                    <button class="btn btn-outline-danger" type="button" (click)="removegroupDetailsField(i)" > Remove </button>
+                </div>
+              </div>
+
+        </ng-container>
+      </ng-container>
+      <div *ngIf="userNotExists">
+        <p style="color: red;">One or more users are not registered</p>
+    </div>
+      <!-- <button type="button" class="btn btn-success btn-circle btn-xl"><i class="fa fa-plus"></i>
+      </button> -->
+
+      <button class="btn btn-primary" type="button" (click)="addgroupDetailsField()"> Add </button>
+    </mat-card>
+      
+    </fieldset>
+    
+    <button class="btn btn-warning" type="submit"> Submit </button>
+    <button class="btn btn-secondary" type="button" (click)="reset()">Reset</button>
+  </form>
+</div>
+
+
+
+<mat-action-list>
+    <mat-card>
+        <button mat-list-item > Group1 </button>
+    </mat-card>
+    
+    <mat-card>
+        <button mat-list-item > Group2 </button>
+    </mat-card>
+</mat-action-list>

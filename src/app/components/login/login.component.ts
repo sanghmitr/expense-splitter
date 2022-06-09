@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../shared/auth.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-login',
@@ -20,12 +21,12 @@ export class LoginComponent implements OnInit {
 
   login() { 
     if (this.email == '') {
-      alert('Please enter your email');
+      Swal.fire('Please enter your email');
       return;
     }
 
     if (this.password == '') { 
-      alert('Please enter your password');
+      Swal.fire('Please enter your password');
       return;
     }
 
@@ -36,7 +37,6 @@ export class LoginComponent implements OnInit {
     
     this.email = '';
     this.password = '';
-
   }
   
   forgotPassword() { 

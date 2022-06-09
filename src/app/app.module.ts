@@ -15,7 +15,7 @@ import { environment } from '../environments/environment';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 
@@ -33,10 +33,14 @@ import { MatListModule } from '@angular/material/list';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatDialogModule } from '@angular/material/dialog';
 
 
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { VerifyEmailComponent } from './components/verify-email/verify-email.component';
+import { ProfileComponent } from './components/profile/profile.component';
+import { GroupComponent } from './components/group/group.component';
+
 
 
 
@@ -53,7 +57,9 @@ import { VerifyEmailComponent } from './components/verify-email/verify-email.com
     SidebarComponent,
     FooterComponent,
     ForgotPasswordComponent,
-    VerifyEmailComponent
+    VerifyEmailComponent,
+    ProfileComponent,
+    GroupComponent,
   ],
   imports: [
     BrowserModule,
@@ -61,6 +67,7 @@ import { VerifyEmailComponent } from './components/verify-email/verify-email.com
     FormsModule,
     BrowserAnimationsModule,
     HttpClientModule,
+    ReactiveFormsModule,
     
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule, // firestore
@@ -80,7 +87,8 @@ import { VerifyEmailComponent } from './components/verify-email/verify-email.com
     MatIconModule,
     MatCardModule,
     MatButtonModule,
-    MatSidenavModule
+    MatSidenavModule,
+    MatDialogModule,
 
   ],
   providers: [],
