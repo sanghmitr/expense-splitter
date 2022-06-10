@@ -40,6 +40,8 @@ import { ForgotPasswordComponent } from './components/forgot-password/forgot-pas
 import { VerifyEmailComponent } from './components/verify-email/verify-email.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { GroupComponent } from './components/group/group.component';
+import { GroupDetailsComponent } from './components/group-details/group-details.component';
+
 
 
 
@@ -60,6 +62,7 @@ import { GroupComponent } from './components/group/group.component';
     VerifyEmailComponent,
     ProfileComponent,
     GroupComponent,
+    GroupDetailsComponent,
   ],
   imports: [
     BrowserModule,

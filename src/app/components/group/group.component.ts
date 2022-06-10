@@ -1,13 +1,16 @@
 import { Component, HostListener, Inject, OnInit } from '@angular/core';
 import { Group } from '../../models/group';
-import { User } from '../../models/user';
-import { user } from '@angular/fire/auth';
+
+
 import { ReactiveFormsModule, FormGroup, FormBuilder, FormArray } from '@angular/forms';
 import { AfterViewChecked, ChangeDetectorRef } from '@angular/core'
 import Swal from 'sweetalert2';
 import { UserService } from '../../shared/user.service';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { GroupService } from '../../shared/group.service';
+import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
+import { User } from 'src/app/models/user';
 
 @Component({
   selector: 'app-group',
@@ -29,9 +32,31 @@ export class GroupComponent implements OnInit {
   }
   constructor(private db: AngularFirestore, private formBuilder: FormBuilder,
     private userService: UserService, private readonly changeDetectorRef: ChangeDetectorRef,
-  private groupService : GroupService) { }
+  private groupService : GroupService, private router : Router) { }
+  
+  tempUser!: Observable<User>; 
   
   ngOnInit(): void {
+    console.log("Groups On Init called");
+    this.getCurrentUserGroups();
+
+    // let item = localStorage.getItem('Token');
+    // if (item) {
+    //   let localStorageuser = JSON.parse(item);
+    //   let uid: string = localStorageuser.uid;
+    //   this.group.groupOwner = uid;
+    //   this.group.members.push(uid);
+      
+    //   this.userService.getCurrentUser().then(doc => {
+    //     this.tempUser = doc;
+    //     console.log(doc);
+    //   });
+    // }
+  }
+
+  ngOnChanges() { 
+    console.log("Groups On changes called");
+    this.getCurrentUserGroups();
   }
 
   ngAfterViewChecked(): void {
@@ -74,6 +99,9 @@ export class GroupComponent implements OnInit {
     else this.members.patchValue([{memberEmail: ''}]);
   }
 
+  closeForm() {
+    this.createButtonClicked = false;
+  }
 
   submit(value: any): void {
   
@@ -104,6 +132,7 @@ export class GroupComponent implements OnInit {
       }
     }
     this.setGroupDetails(value);
+
     this.createButtonClicked = false;
     Swal.fire({
       title: 'Success',
@@ -112,6 +141,8 @@ export class GroupComponent implements OnInit {
 
     
     this.form.reset();
+    this.groups.splice(0);
+    this.getCurrentUserGroups();
     //console.log(value);
   }
 
@@ -132,7 +163,7 @@ export class GroupComponent implements OnInit {
   }
   
   //Function to set group details to local object
-  setGroupDetails(value: any) { 
+  async setGroupDetails(value: any) { 
     let item = localStorage.getItem('Token');
     if (item) {
       let localStorageuser = JSON.parse(item);
@@ -144,10 +175,14 @@ export class GroupComponent implements OnInit {
 
     //fetch all group members uid only
     for (let i = 0; i < value.members.length; i++) { 
-      this.userService.getUserId(value.members[i].memberEmail).then(res => { 
-        this.group.members.push(res);
+      await this.userService.getUserId(value.members[i].memberEmail).then(res => { 
+        this.group.members.push(res.docs[0].id);
+        console.log("user id added : ", res.docs[0].id);
       });
     }
+
+    //Remove duplicates
+    this.group.members = this.group.members.filter((v, i, a) => a.indexOf(v) === i);
 
     this.group.title = value.title;
     this.group.description = value.description;
@@ -157,6 +192,7 @@ export class GroupComponent implements OnInit {
     this.group.joinLink = this.group.gid;
     console.log("Group details are : ", this.group);
     this.groupService.createGroup(this.group);
+    this.group.members.splice(0);
   }
 
 
@@ -164,6 +200,27 @@ export class GroupComponent implements OnInit {
     this.form.reset();
     this.members.clear();
     this.addgroupDetailsField();
+  }
+
+
+  groups : any[] = [];
+  async getCurrentUserGroups() { 
+    let item = localStorage.getItem('Token');
+    if (item) {
+      let localStorageuser = JSON.parse(item);
+      let uid : string = localStorageuser.uid;
+      await this.groupService.getUserGroups(uid).then(res => {
+        res.forEach(doc => {
+          //console.log("Group : ", doc.data());
+          this.groups.push(doc.data());
+        });
+      });
+    }
+  }
+
+  //open group details
+  openGroupDeails(group: any) { 
+    this.router.navigate(['groupDetails']);
   }
 
 }

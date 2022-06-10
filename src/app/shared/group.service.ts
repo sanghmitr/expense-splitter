@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/compat/firestore/';
+import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/compat/firestore/';
+
 import { Group } from '../models/group';
+import { User } from '../models/user';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +11,6 @@ export class GroupService {
 
   groups: Group[] = [];
   
-
   constructor(private db: AngularFirestore) { 
     
   }
@@ -34,9 +35,31 @@ export class GroupService {
       console.log(err);
     });
   }
-  
+
+
+  async addGroupIdToUser(userId: string) { 
+    const res = await this.db.collection('users').doc(userId).ref.get().then(doc => {
+      console.log(doc.data);
+    });
+    console.log("user details", res);
+    // const unionRes = await userRef.update({
+    //   groups: firebase.firestore.FieldValue.arrayUnion(groupId) as unknown as string[]
+    // });
+  }
+
+
+
+  // //Add userId to group members
+  // async addUserToGroup(groupId: string, userId: string) { 
+
+  // }
+
+  //Find all groups in which user is a member
+  async getUserGroups(userId: string) { 
+    return await this.db.collection('groups')
+      .ref.where('members', 'array-contains', userId).get();
+  }
 
   
   
-
 }

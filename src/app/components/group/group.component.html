@@ -18,25 +18,6 @@
     <fieldset>
         <mat-card>
             <div class="container">
-                <!-- <div class="row">
-                    <div class="col-md-1"></div>
-                        <div class="col-md-3">
-                            <legend>Create Group</legend>
-                            
-                            <div class="input-group mb-2 mr-sm-2 mb-sm-0">
-                                
-                                <label for="group-title">Group Title</label>
-                                <div class="input-group-addon" style="width: 2.6rem"><i class="fa fa-at"></i></div>
-                                <input type="text" class="form-control" id="group-title" name="group-title" placeholder="(required)" required autofocus formControlName="title">
-                                <br><br>
-                            </div>
-                            
-                        
-                            <label for="group-description">Group Description</label>
-                            <input type="text-area" class="form-control" id="group-description" name="group-description" placeholder="(optional)" formControlName="description">
-                            <br><br>
-                        </div>
-                </div> -->
                 <div class="form-group">
                     <label > Group Title</label>
                     <input type="email" class="form-control" placeholder="Enter Title" required formControlName="title" >
@@ -79,19 +60,34 @@
       
     </fieldset>
     
-    <button class="btn btn-warning" type="submit"> Submit </button>
-    <button class="btn btn-secondary" type="button" (click)="reset()">Reset</button>
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <button class="btn btn-danger form-control  btn-block" (click)="reset()">Reset</button>
+            </div>
+            
+            <div class="col">
+                <button class="btn btn-secondary form-control btn-block" type="button" (click)= "closeForm()" >Close</button>
+            </div>
+
+            <div class="col">
+                <button id="btnSubmit" class="btn btn-success form-control btn-block" type="submit" >Submit</button>
+            </div>
+        </div>
+    </div>
+    
   </form>
 </div>
 
 
 
 <mat-action-list>
-    <mat-card>
-        <button mat-list-item > Group1 </button>
-    </mat-card>
+    <div *ngFor="let group of groups"> 
+        <mat-card (click) = "openGroupDeails(group)" >
+            <h2 matline> {{group.title}}</h2>
+            <p matLine> Description : {{group.description}}</p>
+        </mat-card>
+        <mat-divider></mat-divider>
+    </div>
     
-    <mat-card>
-        <button mat-list-item > Group2 </button>
-    </mat-card>
 </mat-action-list>

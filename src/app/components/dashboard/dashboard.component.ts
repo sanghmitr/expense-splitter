@@ -20,6 +20,7 @@ export class DashboardComponent implements OnInit {
   currentUser: any;
   
   curUser$!: Observable<User>;
+  user!: User;
   
   constructor(private authService: AuthService, private router: Router, private userService: UserService) { 
     //this.userService.getUser();
@@ -33,7 +34,7 @@ export class DashboardComponent implements OnInit {
     }
     this.getUser().then(() => {
       console.log("Inside Dashboard Oninit : ", this.currentUser);
-    });
+    }); 
   }
 
   sideBarToggler() {
@@ -60,5 +61,5 @@ export class DashboardComponent implements OnInit {
     //console.log("Inside Component : ", this.currentUser);
   }
 
-
+  
 }

@@ -8,6 +8,7 @@ import { RegisterComponent } from './components/register/register.component';
 import { VerifyEmailComponent } from './components/verify-email/verify-email.component';
 import { UserService } from './shared/user.service';
 import { GroupComponent } from './components/group/group.component';
+import { GroupDetailsComponent } from './components/group-details/group-details.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -26,7 +27,12 @@ const routes: Routes = [
         }
       },
       {
-        path: 'groups', component: GroupComponent
+        path: 'groups', component: GroupComponent,
+        children: [
+          {
+            path: 'groupDetails', component: GroupDetailsComponent,
+          }
+        ]
       }
     ]
   },

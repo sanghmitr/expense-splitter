@@ -109,21 +109,11 @@ export class UserService implements Resolve<any>{
   }
 
 
+ 
+
   async getUserId(email: string) {
-    let userID = '';
-    await this.db.collection('users').ref.where('email', '==', email.toLowerCase()).get().then((doc) => {
-      if (doc.empty) {
-        console.log("User not found");
-      }
-      else {
-        console.log("User found");
-        userID = doc.docs[0].id;
-        doc.forEach(doc => {
-          console.log(doc.id);
-        });
-      }
-    });
-    return userID;
+    
+    return this.db.collection('users').ref.where('email', '==', email.toLowerCase()).get()
   }
 }
 
