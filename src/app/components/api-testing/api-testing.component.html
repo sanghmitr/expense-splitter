@@ -1,0 +1,25 @@
+<mat-card>
+    {{user | json}}
+</mat-card>
+
+<mat-card>
+    <button class="btn btn-secondary" (click) = "getUser()"> Get User by Id</button>
+    <p>{{tempUser | json}}</p>
+</mat-card>
+
+<mat-card>
+    <button class="btn btn-secondary" (click) = "getUserByEmail()"> Get User by Email</button>
+    <p>{{tempUser | json}}</p>
+</mat-card>
+
+<mat-card>
+    <button class="btn btn-secondary" (click) = "addUser()"> add User </button>
+</mat-card>
+
+<mat-card>
+    <button class="btn btn-secondary" (click) = "updateUser()"> Update user</button>
+</mat-card>
+
+<mat-card>
+    <button class="btn btn-secondary" (click) = "addGroupToUserDoc()"> add group to user</button>
+</mat-card>

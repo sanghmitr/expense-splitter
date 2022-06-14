@@ -1,0 +1,25 @@
+<span>
+   <h1>My Groups</h1> 
+</span>
+
+<mat-action-list>
+    <div *ngFor="let group of groups"> 
+        <mat-card (click) = "openGroupDeails(group)">
+            <h2 matline> {{group.title}}</h2>
+            <div class="row">
+                <div class="col">
+                    <p matLine> Description : {{group.description}}</p>
+                </div>
+                <div class="col float-right">
+                    <!-- <p > Date created - {{group.createdAt | date:'mediumDate'}}</p> -->
+                </div>
+            </div>
+            
+        </mat-card>
+        <mat-divider></mat-divider>
+    </div>
+</mat-action-list>
+
+<div *ngIf="groups.length === 0">
+    <p> No groups available. Please join or create a group.</p>
+</div>

@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "expense-splitter-22ed0": {
+      "hosting": {
+        "expense-splitter": [
+          "expense-splitter-22ed0"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "expense-splitter-22ed0"
+  }
+}

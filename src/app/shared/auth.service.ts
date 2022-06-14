@@ -6,6 +6,7 @@ import { BehaviorSubject } from 'rxjs';
 import Swal from 'sweetalert2';
 import { User } from '../models/user';
 import { AngularFirestore } from '@angular/fire/compat/firestore/';
+import { UserService } from './user.service';
 
 @Injectable({
   providedIn: 'root'
@@ -18,11 +19,12 @@ export class AuthService {
     phone: '',
     fullName: '',
     photoURL: '',
-    balance: 0
+    balance: 0,
+    groups : []
   };
 
   errorResult: string = '';
-  constructor(private fireauth: AngularFireAuth, private router: Router, private firestore : AngularFirestore) { 
+  constructor(private fireauth: AngularFireAuth, private router: Router, private firestore : AngularFirestore, private userService : UserService) { 
     
   }
 
@@ -40,14 +42,12 @@ export class AuthService {
       }
     })
       .catch(err => {
-        //alert(err.message);
-        Swal.fire(
-          {
-            title: 'Error',
-            text: 'Invalid Credentials or User does not exist', 
-          }
-        )
-        this.errorResult = err.message;
+        if (err.code == 'auth/invalid-email' || err.code == 'auth/wrong-password') {
+          Swal.fire({ text: 'Invalid Email or Password', })
+        }
+        else if (err.code == 'auth/user-not-found') { 
+          Swal.fire({ text: 'User not found', })
+        }
         this.router.navigate(['/login']);
       });
     return this.errorResult;
@@ -59,34 +59,38 @@ export class AuthService {
       .then(res => {
         this.sendEmailVerification(res.user);
         console.log(res.user);
-        if(res.user)
-        {
+        if (res.user) {
           this.userobj.uid = res.user.uid;
           this.userobj.email = res.user.email == null ? '' : res.user.email.toLowerCase();
           this.userobj.fullName = fullname;
           this.userobj.phone = phone;
           this.userobj.photoURL = res.user.photoURL == null ? '' : res.user.photoURL;
           this.userobj.balance = 0;
-          this.createUser(this.userobj);
+          this.userobj.groups = []
 
-          
+          this.userService.addUserWithKnownUid(this.userobj);
         }
-        
         this.router.navigate(['/verify-email']);
       },
         err => {
           // alert(err.message);
-        
-          Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: err.message,
-          })
-          this.errorResult = err.message;
-          this.router.navigate(['/register']);
-        }
-      )
-    return this.errorResult;
+          if (err.code == 'auth/email-already-in-use') {
+            Swal.fire({
+              text: 'Email already in use Or Already Signed with Google',
+            })
+            this.errorResult = err.message;
+            this.router.navigate(['/register']);
+          }
+          else if (err.code == 'auth/invalid-email') {
+            Swal.fire({ text: 'Invalid Email', })
+          }
+          else if (err.code == 'auth/weak-password') {
+            Swal.fire({ text: 'Weak Password - Password must be 6 character or more', })
+          }
+          else if (err.code == 'auth/operation-not-allowed') {
+            Swal.fire({ text: 'Email not verified', })
+          }
+        });
   }
   
   //create user in firestore, If already exists merge data
@@ -140,34 +144,47 @@ export class AuthService {
     })
   }
 
-
+  // tempUser!: User;
   //Sign-In with google
   googleSignIn() {
     this.fireauth.signInWithPopup(new GoogleAuthProvider()).then(res => {
       this.router.navigate(['dashboard']);
       localStorage.setItem('Token', JSON.stringify(res.user));
-      if(res.user)
-        {
+      console.log("login using google-sign in ", res.user);
+      console.log(res);
+
+      if (res.additionalUserInfo?.isNewUser == true)
+      {
+          if (res.user != null) {
+
           this.userobj.uid = res.user.uid;
           this.userobj.email = res.user.email == null ? '' : res.user.email.toLowerCase();
           this.userobj.fullName = res.user.displayName == null ? '' : res.user.displayName;
           this.userobj.phone = '';
           this.userobj.photoURL = res.user.photoURL == null ? '' : res.user.photoURL;
           this.userobj.balance = 0;
-          this.createUser(this.userobj);
+          this.userobj.groups = []
+      
+          this.userService.addUserWithKnownUid(this.userobj);
         }
-      console.log(res.user);
-    }, err => {
-      if (err.code == 'auth/popup-closed-by-user') {
-        return;
       }
       else {
-        Swal.fire(
-          'Oops...',
-          err.message,
-        )
+        let photoURL = res?.user?.photoURL == null ? '' : res.user.photoURL;
+        let userId = res?.user?.uid == null ? '' : res.user.uid;
+        this.userService.updatePhotoURL(photoURL, userId);
       }
-    })
+      
+    }, err => {
+        if (err.code == 'auth/popup-closed-by-user') {
+          return;
+        }
+        else {
+          Swal.fire(
+            'Oops...',
+            err.message,
+          )
+        }
+      });
   }
 
 

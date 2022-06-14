@@ -8,7 +8,7 @@ import { HomeComponent } from './home/home.component';
 
 
 // Import the functions you need from the SDKs you need
-import { AngularFireModule } from '@angular/fire/compat';
+
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore/'; 
 
 import { environment } from '../environments/environment';
@@ -42,8 +42,18 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { GroupComponent } from './components/group/group.component';
 import { GroupDetailsComponent } from './components/group-details/group-details.component';
 
+import { ApiTestingComponent } from './components/api-testing/api-testing.component';
+import { GrouplistComponent } from './components/grouplist/grouplist.component';
+import { GroupDetailsResolve } from './components/group-details/group-details.resolve';
+import { GroupService } from './shared/group.service';
+import { PathNotFoundComponent } from './components/path-not-found/path-not-found.component';
 
 
+import { initializeApp,provideFirebaseApp } from '@angular/fire/app';
+import { provideAuth,getAuth } from '@angular/fire/auth';
+import { provideFirestore,getFirestore } from '@angular/fire/firestore';
+import { AngularFireModule } from '@angular/fire/compat';
+import { DatePipe } from '@angular/common';
 
 
 
@@ -63,6 +73,9 @@ import { GroupDetailsComponent } from './components/group-details/group-details.
     ProfileComponent,
     GroupComponent,
     GroupDetailsComponent,
+    ApiTestingComponent,
+    GrouplistComponent,
+    PathNotFoundComponent,
   ],
   imports: [
     BrowserModule,
@@ -74,8 +87,9 @@ import { GroupDetailsComponent } from './components/group-details/group-details.
     
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule, // firestore
-
-    BrowserAnimationsModule,
+    provideFirebaseApp(() => initializeApp(environment.firebase)),
+    provideAuth(() => getAuth()),
+    provideFirestore(() => getFirestore()),
 
 
     MatDividerModule,
@@ -92,9 +106,10 @@ import { GroupDetailsComponent } from './components/group-details/group-details.
     MatButtonModule,
     MatSidenavModule,
     MatDialogModule,
+    
 
   ],
-  providers: [],
+  providers: [GroupService, GroupDetailsResolve, DatePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

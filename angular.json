@@ -116,6 +116,16 @@
             ],
             "scripts": []
           }
+        },
+        "deploy": {
+          "builder": "@angular/fire:deploy",
+          "options": {
+            "prerender": false,
+            "ssr": false,
+            "browserTarget": "expense-splitter:build:production",
+            "firebaseProject": "expense-splitter-22ed0",
+            "firebaseHostingSite": "expense-splitter-22ed0"
+          }
         }
       }
     }

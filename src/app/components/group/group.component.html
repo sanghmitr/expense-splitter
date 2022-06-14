@@ -1,12 +1,20 @@
 <mat-card>
-    <mat-card-header>
-        <mat-card-title>
-            <h1>Groups</h1>
-        </mat-card-title>
-        <div class="right">
-            <button type="button" class="btn btn-primary" (click) = "openForm()">Create Group</button>
+    
+        <div class="row">
+            <div class="col-6">
+                <mat-card-title>
+                    <h1 style="padding : 10px">Groups</h1>
+                </mat-card-title>
+            </div>
+
+            <div class="col-3">
+                <button  class="btn btn-success float-right"  (click) = "joinGroup()">Join</button>
+            </div>
+            <div class="col-3">
+                <button  class="btn btn-primary float-right"  (click) = "openForm()">Create</button>
+            </div>
         </div>
-    </mat-card-header>
+        
 </mat-card>
 
 <mat-divider></mat-divider>
@@ -60,34 +68,28 @@
       
     </fieldset>
     
+    
+    
     <div class="container">
         <div class="row">
             <div class="col">
-                <button class="btn btn-danger form-control  btn-block" (click)="reset()">Reset</button>
+                <button class="btn btn-danger form-control  btn-block formButton" (click)="reset()">Reset</button>
             </div>
             
             <div class="col">
-                <button class="btn btn-secondary form-control btn-block" type="button" (click)= "closeForm()" >Close</button>
+                <button class="btn btn-secondary form-control btn-block formButton" type="button" (click)= "closeForm()" >Close</button>
             </div>
 
             <div class="col">
-                <button id="btnSubmit" class="btn btn-success form-control btn-block" type="submit" >Submit</button>
+                <button id="btnSubmit" class="btn btn-success form-control btn-block formButton" type="submit" >Submit</button>
             </div>
         </div>
     </div>
     
   </form>
+  <mat-divider></mat-divider>
+  <br>
 </div>
 
+<app-grouplist [groups] = "groups"></app-grouplist>
 
-
-<mat-action-list>
-    <div *ngFor="let group of groups"> 
-        <mat-card (click) = "openGroupDeails(group)" >
-            <h2 matline> {{group.title}}</h2>
-            <p matLine> Description : {{group.description}}</p>
-        </mat-card>
-        <mat-divider></mat-divider>
-    </div>
-    
-</mat-action-list>

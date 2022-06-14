@@ -5,5 +5,6 @@ export interface Group {
     groupOwner: User["uid"],
     description: string,
     members: string[],
-    joinLink: string
+    joinLink: string,
+    createdAt : Date,
 }

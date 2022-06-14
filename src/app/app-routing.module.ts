@@ -9,6 +9,11 @@ import { VerifyEmailComponent } from './components/verify-email/verify-email.com
 import { UserService } from './shared/user.service';
 import { GroupComponent } from './components/group/group.component';
 import { GroupDetailsComponent } from './components/group-details/group-details.component';
+import { ApiTestingComponent } from './components/api-testing/api-testing.component';
+import { GroupService } from './shared/group.service';
+import { GroupDetailsResolve } from './components/group-details/group-details.resolve';
+import { GrouplistResolverGuard } from './guards/grouplist-resolver.guard';
+import { PathNotFoundComponent } from './components/path-not-found/path-not-found.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -28,11 +33,22 @@ const routes: Routes = [
       },
       {
         path: 'groups', component: GroupComponent,
+        // resolve: {
+        //   data : GrouplistResolverGuard
+        // }
         children: [
-          {
-            path: 'groupDetails', component: GroupDetailsComponent,
-          }
+          
         ]
+      },
+      {
+        path: 'dashboard/groups/groupDetails/:id', component: GroupDetailsComponent,
+        pathMatch : 'full',
+        resolve: {
+          groupdata : GroupDetailsResolve
+        }
+      },
+      {
+        path: 'api-testing', component : ApiTestingComponent
       }
     ]
   },
