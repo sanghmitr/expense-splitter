@@ -34,6 +34,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatDialogModule } from '@angular/material/dialog';
+import { ScrollingModule } from '@angular/cdk/scrolling';
+import { MatTabsModule } from '@angular/material/tabs';
 
 
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
@@ -54,6 +56,9 @@ import { provideAuth,getAuth } from '@angular/fire/auth';
 import { provideFirestore,getFirestore } from '@angular/fire/firestore';
 import { AngularFireModule } from '@angular/fire/compat';
 import { DatePipe } from '@angular/common';
+import { MemberslistComponent } from './components/memberslist/memberslist.component';
+import { firstValueFrom, isObservable, Observable } from 'rxjs';
+import { ExpenseslistComponent } from './components/expenseslist/expenseslist.component';
 
 
 
@@ -76,6 +81,8 @@ import { DatePipe } from '@angular/common';
     ApiTestingComponent,
     GrouplistComponent,
     PathNotFoundComponent,
+    MemberslistComponent,
+    ExpenseslistComponent,
   ],
   imports: [
     BrowserModule,
@@ -106,10 +113,30 @@ import { DatePipe } from '@angular/common';
     MatButtonModule,
     MatSidenavModule,
     MatDialogModule,
+    ScrollingModule,
+    MatTabsModule,
     
 
   ],
   providers: [GroupService, GroupDetailsResolve, DatePipe],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule { 
+
+  async waitFor<T>(prom: Promise<T> | Observable<T>): Promise<T> {
+    if (isObservable(prom)) {
+      prom = firstValueFrom(prom);
+    }
+    const macroTask = Zone.current
+      .scheduleMacroTask(
+        `WAITFOR-${Math.random()}`,
+        () => { },
+        {},
+        () => { }
+      );
+    return prom.then((p: T) => {
+      macroTask.invoke();
+      return p;
+    });
+  }
+}

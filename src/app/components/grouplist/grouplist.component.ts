@@ -6,6 +6,7 @@ import { UserService } from '../../shared/user.service';
 import { User } from 'src/app/models/user';
 import { DatePipe } from '@angular/common';
 
+
 @Component({
   selector: 'app-grouplist',
   templateUrl: './grouplist.component.html',
@@ -43,7 +44,15 @@ export class GrouplistComponent implements OnInit, OnDestroy, OnChanges {
 
   //open group details
   openGroupDeails(group: Group) {
-    this.router.navigate(['dashboard/groups/groupDetails', group.gid]);
+    this.router.navigate(['dashboard/groupdetails', group.gid]).then((e) => { 
+      if (e) {
+        console.log(e);
+        console.log("routing successfull");
+      }
+      else {
+        console.log("routing failed");
+      }
+    });
   }
 
   groupCreatedBy(group : Group): string {

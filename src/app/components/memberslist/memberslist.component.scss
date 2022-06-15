@@ -1,0 +1,59 @@
+.container {
+    position: relative;
+    width: 50%;
+  }
+  
+  .image {
+    border-radius: 50%;
+    display: block;
+    width: 50px;
+    height: 50px;
+  }
+  
+  .overlay {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: auto;
+    width: auto;
+    opacity: 0;
+    transition: .5s ease;
+    background-color: #a2a3a3;
+  }
+  
+  .container:hover .overlay {
+    opacity: 1;
+  }
+  
+  .text {
+    color: white;
+    font-size: 5px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    text-align: center;
+  }
+
+  .example-viewport {
+    height: 180px;
+    width: 500px;
+  }
+  
+  .example-item {
+    height: 60px;
+  }
+
+  .detailscard{
+    height: 250px;
+}
+
+.membername{
+    font-size: 15px;
+    margin-left: 50px;
+    margin-top: 10px;
+}

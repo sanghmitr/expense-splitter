@@ -1,5 +1,32 @@
-<p>Group details works</p>
-<mat-card>
-    <h1> {{group.title}} </h1>
-    <p> {{group.description}}</p>
-</mat-card>
+<!-- <p>Group details works</p> -->
+<!-- <div *ngIf="group.title.length === 0">
+    <img src="/src/assets/Fidget-spinner.gif" alt="loader">
+</div> -->
+<div class="row">
+    <div class= "col">
+        <mat-card class="detailscard">
+            <h1> {{group.title}} </h1>
+            <p> Description :- {{group.description}}</p>
+            <p> Created At :- {{group.createdAt | date : 'medium'}}</p>
+            <p> Created By :- {{groupOwnerName}}</p>
+            <div class="row">
+                <div class="col">
+                    <p> Invite Code :- {{group.joinLink}}</p>
+                </div>
+                <div class="col float-right">
+                    
+                    <button class="btn btn-outline-dark bi bi-clipboard" (click) = "copyText(group.joinLink)">
+                    </button>
+                    <!-- <button class="btn btn-secondary" >copy</button> -->
+                </div>
+            </div>
+            
+        </mat-card>
+    </div>
+    
+    <div class="col">
+        <app-memberslist [members] = "groupMembers"></app-memberslist>
+    </div>
+</div>
+
+<app-expenseslist></app-expenseslist>

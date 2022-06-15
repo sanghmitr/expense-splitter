@@ -197,6 +197,7 @@ export class GroupComponent implements OnInit {
     
     let currentTime = new Date();
     this.group.gid = this.group.title + currentTime.getTime().toString();
+    this.group.gid = this.group.gid.replace(/ /g, '');
     this.group.joinLink = this.group.gid;
     this.group.createdAt = new Date();
     console.log("Group details are : ", this.group);

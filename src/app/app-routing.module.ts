@@ -41,20 +41,21 @@ const routes: Routes = [
         ]
       },
       {
-        path: 'dashboard/groups/groupDetails/:id', component: GroupDetailsComponent,
-        pathMatch : 'full',
-        resolve: {
-          groupdata : GroupDetailsResolve
-        }
+        path: 'groupdetails/:id', component: GroupDetailsComponent,
+        // pathMatch : 'full',
+        // resolve: {
+        //   groupdata : GroupDetailsResolve
+        // }
       },
       {
         path: 'api-testing', component : ApiTestingComponent
       }
     ]
   },
+  
   { path: 'verify-email', component: VerifyEmailComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
-  
+  { path : "**", component : PathNotFoundComponent },
 
 ];
 

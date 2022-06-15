@@ -1,0 +1,26 @@
+<mat-card class="detailscard">
+    <mat-card-title>
+        <h1>Members</h1>
+    </mat-card-title>
+
+    <cdk-virtual-scroll-viewport itemSize="50" class="example-viewport">
+        <div *ngFor="let member of members" class="example-item">
+            <div class="row">
+                <div class="col-2">
+                    <div class="container">
+                        <img *ngIf = "member.photoURL !== ''" [src] = "member.photoURL"  (error)="setDefaultPic(member)" alt="user_photo" class="image">
+                        <img *ngIf = "member.photoURL === ''" src = "/src/assets/user-logo.png" alt="user_photo" class="image">
+                        <!-- <div class="overlay">
+                        <div class="text">{{member.fullName}}</div>
+                        </div> -->
+                    </div>
+                </div> 
+                <div class="col membername">
+                    <p>{{member.fullName}}</p>
+                </div>
+            </div>
+        </div>
+    </cdk-virtual-scroll-viewport>
+    
+
+</mat-card>
