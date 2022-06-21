@@ -14,6 +14,7 @@ import { GroupService } from './shared/group.service';
 import { GroupDetailsResolve } from './components/group-details/group-details.resolve';
 import { GrouplistResolverGuard } from './guards/grouplist-resolver.guard';
 import { PathNotFoundComponent } from './components/path-not-found/path-not-found.component';
+import { AddexpenseComponent } from './components/addexpense/addexpense.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },

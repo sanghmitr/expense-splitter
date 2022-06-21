@@ -133,10 +133,7 @@ export class GroupComponent implements OnInit {
       }
     }
     this.setGroupDetails(value);
-    // console.log("Group Details : ", this.groupDetails);
-    // for (let i = 0; i < this.group.members.length; i++) { 
-    //   this.userService.addGroupToUserDoc(this.group.gid, this.group.members[i]);
-    // }
+
 
     this.createButtonClicked = false;
     Swal.fire({
@@ -146,12 +143,6 @@ export class GroupComponent implements OnInit {
 
     
     this.form.reset();
-    // this.groups.splice(0);
-    // await this.groupService.getAllGroupsOfCurrentUser().then(res => { 
-    //   this.groups = res;
-    //   console.log("Groups : ", this.groups);
-    // });
-    //console.log(value);
   }
 
 

@@ -2,5 +2,20 @@
 
 @import "~bootstrap-icons/font/bootstrap-icons.css";
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+@font-face {
+  font-family: "Gordita_Medium";
+  font-style: normal;
+  font-weight: normal;
+  src: local("Gordita_Medium"),
+    url("./assets/Gordita_Medium.woff") format("woff");
+}
+
+html,
+body {
+  height: 100%;
+  font-family: Gordita_Medium, sans-serif,'Courier New', Courier, monospace;
+}
+body {
+  margin: 0;
+  font-family: Gordita_Medium, sans-serif, Roboto, "Helvetica Neue";
+}

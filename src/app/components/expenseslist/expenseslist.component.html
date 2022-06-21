@@ -3,14 +3,178 @@
     <mat-tab-group>
     <mat-tab label="Expenses" class="expenses">
       <ng-template matTabContent>
-        Content 1 
+        <br>
+        <button #addbutton class="btn btn-success" (click) = "addExpense()">
+          Add Expense
+        </button>
+        
+        <div *ngIf="addbuttonClicked">
+          <form>
+
+            <mat-form-field class="example-full-width" appearance="fill">
+              <mat-label>Title</mat-label>
+              <input matInput placeholder="Title" [(ngModel)]="title" name="title" required>
+            </mat-form-field>
+
+            <mat-form-field class="example-full-width" appearance="fill">
+              <mat-label>Total Amount</mat-label>
+              <input type="number" matInput placeholder="Total Amount" [(ngModel)]="total_amount" (keyup) = "distributeAmount(selectedShareType)" name="total_amount" required>
+            </mat-form-field>
+            <!-- <input class="form-control" type="text" placeholder="title" name="title" [(ngModel)]="title" required> -->
+
+            <mat-form-field appearance="fill" class="example-full-width">
+              <mat-label>Paid By</mat-label>
+              <mat-select matNativeControl required [(value)]="paidby">
+                <mat-option *ngFor="let member of groupMembers" [value]="member.uid">
+                  {{member.fullName}}
+                  </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <p>You selected: {{paidby}}</p>
+
+
+            <mat-form-field appearance="fill" class="example-full-width">
+              <mat-label>Category</mat-label>
+              <mat-select matNativeControl required [(value)]="selectedCategory">
+                <mat-option *ngFor="let category of categories" [value]="category">
+                  {{category}}
+                  </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <p>You selected: {{selectedCategory}}</p>
+            
+
+            <label id="example-radio-group-label">How do you want to distribute?</label>
+            <div class="row">
+            <mat-radio-group
+              aria-labelledby="example-radio-group-label"
+              class="example-radio-group"
+              [(ngModel)]="selectedShareType"
+              name="selectedShareType" class="example-full-width" required>
+
+              <mat-radio-button class="example-radio-button" *ngFor="let shareType of sharesType" [value]="shareType" (click)="distributeAmount(shareType)">
+                
+                <div class="col">
+                {{shareType}}
+                </div> 
+
+              </mat-radio-button>
+            </mat-radio-group>
+
+              <div>Your share type is : {{selectedShareType}}</div>
+              <div *ngIf="selectedShareType === 'Exact'">
+                <p class="amountremaining" *ngIf="(total_amount - enteredTotal) > 0">
+                  Remaining Amount : -{{total_amount - enteredTotal}}
+                </p>
+                <p class="amountexcess" *ngIf="(total_amount - enteredTotal) < 0">
+                  Excess Amount : +{{enteredTotal - total_amount}}
+                </p>
+                <p class="amountexcess" *ngIf="(total_amount - enteredTotal) == 0">
+                  Excess Amount : {{enteredTotal - total_amount}}
+                </p>
+              </div>
+
+            </div>
+
+            <div class="parentListDiv">
+
+              <div class="selectionList">
+                <mat-selection-list #list [(ngModel)]="selectedShares" (ngModelChange)="onListSelectionChange($event)"
+                  name="selectedUsersList">
+                  <mat-list-option *ngFor="let share of shares" [value]="share" checkboxPosition="before">
+              
+                    <p>
+                      {{share.user.fullName}}
+                    </p>
+              
+                  </mat-list-option>
+                </mat-selection-list>
+              </div>
+
+              <div *ngIf="selectedShareType === 'Equal'">
+               
+                <div class="inputAmountList">
+                  <mat-list *ngFor="let share of shares">
+                    <mat-list-item>
+                      <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text" style="margin-top: 10px;"
+                            id="inputGroup-sizing-default">₹</span>
+                        </div>
+                        <input type="number" [disabled]="true"
+                          [value]="share.share" name="shareAmount" class="form-control" aria-label="Default"
+                          aria-describedby="inputGroup-sizing-default">
+                      </div>
+                    </mat-list-item>
+                  </mat-list>
+                </div>
+              </div>
+
+              <!-- If share type is not equal distribution -->
+              <div *ngIf="selectedShareType !== 'Equal'">
+                <div class="inputAmountList">
+                  <mat-list *ngFor="let share of shares">
+                    <mat-list-item>
+                      <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                          <span *ngIf="selectedShareType === 'Percentage'" class="input-group-text" style="margin-top: 10px;" id="inputGroup-sizing-default">%</span>
+                          <span *ngIf="selectedShareType === 'Exact'"class="input-group-text" style="margin-top: 10px;" id="inputGroup-sizing-default">₹</span>
+                        </div>
+                        <input type="number" *ngIf="selectedShareType === 'Exact'" [disabled]="!share.isSelected" [value]="share.share" (keyup)="updateShareAmount($event, share)" name="shareAmount" class="form-control"
+                          aria-label="Default" aria-describedby="inputGroup-sizing-default">
+                        <input type="number" min="0" max="100" *ngIf="selectedShareType === 'Percentage'" [disabled]="!share.isSelected" [value]="share.share" (keyup)="updateSharePercentage($event, share)" name="shareAmount" class="form-control"
+                          aria-label="Default" aria-describedby="inputGroup-sizing-default">
+                      </div>
+                    </mat-list-item>
+                  </mat-list>
+                </div>
+              </div>
+
+            </div>
+          
+
+
+            <div>
+              <mat-list *ngFor="let share of shares">
+                <p>{{share.user.fullName}} : {{share.share}}</p>
+              </mat-list>
+            </div>
+
+            <button type="reset" class = "btn btn-secondary" (click) = "closeform()"> close</button>
+            <button type="submit" class="btn btn-success" (click)="submitForm()"> Submit</button>
+          </form>
+        </div>
+        
+        <!-- Expenses List will be shown here onwards -->
+        <div>
+          <h1>Expenses List</h1>
+          <mat-list *ngFor="let expense of expensesList">
+            <mat-list-item>
+              <mat-card>
+                <h3>{{expense.title}}</h3>
+                <br>
+                <p>{{expense.expense_amount}}</p>
+                <br>
+                <p>{{expense.paidBy}}</p>
+                <br>
+                <p>{{expense.category}}</p>
+                <br>
+              </mat-card>
+              
+            </mat-list-item>
+          </mat-list>
+        </div>
       </ng-template>
     </mat-tab>
+
+
     <mat-tab label="Settlements" class="settlements">
       <ng-template matTabContent>
         Content 2 
       </ng-template>
     </mat-tab>
+
+    
   </mat-tab-group>
 </mat-card>
 

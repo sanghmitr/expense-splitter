@@ -8,5 +8,5 @@ export interface Transaction {
     to: User["uid"],
     amount: number,
     groupId : Group["gid"],
-    date: string
+    date: Date,
 }

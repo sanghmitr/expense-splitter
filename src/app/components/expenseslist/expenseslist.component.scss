@@ -1,0 +1,64 @@
+#addbutton{
+    margin: 10px;
+}
+
+.form-control{
+    margin: 10px;
+}
+
+.mat-radio-button ~ .mat-radio-button {
+    margin-left: 20px;
+  }
+
+.example-full-width {
+width: 100%;
+}
+
+.amountInput{
+    border: 1px solid #ced4daa6;
+    border-radius: 10%;
+    height: auto;
+    width: 80px;
+}
+
+.mat-list-option{
+    margin: 8px;
+}
+
+// .leftSide{width:auto; border-bottom:2px solid blue;float:left;}
+// .rightSide{width:auto; border-bottom:2px solid red;float:right;}
+// // ::ng-deep .rightSide .mat-pseudo-checkbox{display:none;}
+// .rightSide .mat-list-item, .leftSide .mat-list-item{height:50px;}
+// .parentDiv{width:50vw;}
+
+.parentListDiv{
+    width: auto;
+}
+.selectionList{
+    width: auto;
+    float: left;
+}
+
+.inputAmountList{
+    margin-top: 20px;
+    width: auto;
+    float: left;
+}
+
+.amountremaining{
+    color: red;
+    font-size: 15px;
+}
+
+.amountexcess{
+    color: green;
+    font-size: 15px;
+}
+
+.expenses{
+    height: auto;
+}
+
+mat-tab-group{
+    height: 1000px;
+}

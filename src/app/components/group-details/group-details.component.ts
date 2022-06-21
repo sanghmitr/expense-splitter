@@ -51,6 +51,9 @@ export class GroupDetailsComponent implements OnInit {
       console.log("Group Details : ", this.group);
     });
 
+    // this.createdDate = this.group.createdAt.toDateString();
+    // console.log("Created at : ", this.createdDate);
+
     //Get all group Member details
     let uids = this.group.members;
     for (let i = 0; i < uids.length; i++) { 
@@ -71,7 +74,7 @@ export class GroupDetailsComponent implements OnInit {
 
   copyText(textToCopy: string) {
     this.clipboard.copy(textToCopy);
-    Notify.success('Copied to clipboard');
+    Notify.success('Invite code copied to clipboard');
   }
 
 }

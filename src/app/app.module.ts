@@ -36,6 +36,10 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatSelectModule } from '@angular/material/select';
+import {MatRadioModule} from '@angular/material/radio';
+import { MatInputModule } from '@angular/material/input';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
@@ -59,6 +63,8 @@ import { DatePipe } from '@angular/common';
 import { MemberslistComponent } from './components/memberslist/memberslist.component';
 import { firstValueFrom, isObservable, Observable } from 'rxjs';
 import { ExpenseslistComponent } from './components/expenseslist/expenseslist.component';
+import { AddexpenseComponent } from './components/addexpense/addexpense.component';
+import { ImageFallbackDirective } from './common/image-fallback.directive';
 
 
 
@@ -83,6 +89,8 @@ import { ExpenseslistComponent } from './components/expenseslist/expenseslist.co
     PathNotFoundComponent,
     MemberslistComponent,
     ExpenseslistComponent,
+    AddexpenseComponent,
+    ImageFallbackDirective,
   ],
   imports: [
     BrowserModule,
@@ -91,13 +99,12 @@ import { ExpenseslistComponent } from './components/expenseslist/expenseslist.co
     BrowserAnimationsModule,
     HttpClientModule,
     ReactiveFormsModule,
-    
+
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule, // firestore
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),
-
 
     MatDividerModule,
     MatToolbarModule,
@@ -115,25 +122,25 @@ import { ExpenseslistComponent } from './components/expenseslist/expenseslist.co
     MatDialogModule,
     ScrollingModule,
     MatTabsModule,
-    
-
+    MatSelectModule,
+    MatRadioModule,
+    MatInputModule,
+    MatCheckboxModule,
   ],
   providers: [GroupService, GroupDetailsResolve, DatePipe],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { 
-
+export class AppModule {
   async waitFor<T>(prom: Promise<T> | Observable<T>): Promise<T> {
     if (isObservable(prom)) {
       prom = firstValueFrom(prom);
     }
-    const macroTask = Zone.current
-      .scheduleMacroTask(
-        `WAITFOR-${Math.random()}`,
-        () => { },
-        {},
-        () => { }
-      );
+    const macroTask = Zone.current.scheduleMacroTask(
+      `WAITFOR-${Math.random()}`,
+      () => {},
+      {},
+      () => {}
+    );
     return prom.then((p: T) => {
       macroTask.invoke();
       return p;

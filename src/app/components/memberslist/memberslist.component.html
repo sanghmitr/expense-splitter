@@ -8,8 +8,8 @@
             <div class="row">
                 <div class="col-2">
                     <div class="container">
-                        <img *ngIf = "member.photoURL !== ''" [src] = "member.photoURL"  (error)="setDefaultPic(member)" alt="user_photo" class="image">
-                        <img *ngIf = "member.photoURL === ''" src = "/src/assets/user-logo.png" alt="user_photo" class="image">
+                        <img *ngIf = "member.photoURL !== ''" [src] = "member.photoURL"  appImgFallback alt="user_photo" class="image">
+                        <img *ngIf = "member.photoURL === ''" src = "/src/assets/user-logo.png" alt="user_photo" class="image" appImgFallback>
                         <!-- <div class="overlay">
                         <div class="text">{{member.fullName}}</div>
                         </div> -->

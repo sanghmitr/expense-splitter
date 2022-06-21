@@ -5,14 +5,14 @@
         </div >
 
         <div *ngIf="currentUser.photoURL === ''; else image_with_URL_available">
-            <img src="https://png.pngtree.com/png-vector/20190301/ourlarge/pngtree-vector-administration-icon-png-image_747092.jpg" alt="User_Image">
+            <img src="/src/assets/user-logo.png" alt="User_Image" appImgFallback>
         </div>
         
         <ng-template #image_with_URL_available>
-            <img  [src]= "currentUser.photoURL" alt="user_Image">
+            <img  [src]= "currentUser.photoURL" alt="user_Image" appImgFallback>
         </ng-template>
         
-        <h5> {{ currentUser.fullName }}</h5>
+        <h3> {{ currentUser.fullName }}</h3>
     </div>
 
     <mat-divider></mat-divider>
