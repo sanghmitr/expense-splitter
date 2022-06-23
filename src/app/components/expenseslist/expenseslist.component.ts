@@ -7,13 +7,12 @@ import { GroupService } from '../../shared/group.service';
 import { AppModule } from '../../app.module';
 import { UserService } from '../../shared/user.service';
 import { User } from 'src/app/models/user';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { MatSelectionListChange } from '@angular/material/list';
 import { share } from 'src/app/models/share';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import { Transaction } from '../../models/transactions';
 import { ExpenseService } from '../../shared/expense.service';
 import { TransactionService } from '../../shared/transaction.service';
+
 
 @Component({
   selector: 'app-expenseslist',
@@ -44,16 +43,16 @@ export class ExpenseslistComponent implements OnInit {
   shares: share[] = [];
   selectedShares: share[] = [];
 
-
   expensesList: Expense[] = [];
-  
+
   constructor(
     private router: ActivatedRoute,
+    private router2: Router,
     private groupService: GroupService,
     private appModule: AppModule,
     private userService: UserService,
     private expenseService: ExpenseService,
-    private transactionService : TransactionService
+    private transactionService: TransactionService
   ) {}
 
   async ngOnInit() {
@@ -83,10 +82,16 @@ export class ExpenseslistComponent implements OnInit {
     }
 
     //Fetch all expenses of this group
-    this.expenseService.getExpenseList(this.groupid).subscribe((res: Expense[]) => {
-      this.expensesList = res;
-      console.log('Expenses List : ', this.expensesList);
-    });
+    this.expenseService
+      .getExpenseList(this.groupid)
+      .subscribe((res: Expense[]) => {
+        this.expensesList = res.sort((a, b) => {
+          return (
+            new Date(b.expense_date).getTime() - new Date(a.expense_date).getTime()
+          );
+        });
+        console.log('Expenses List : ', this.expensesList);
+      });
   }
 
   addExpense() {
@@ -195,54 +200,57 @@ export class ExpenseslistComponent implements OnInit {
   }
 
   submitForm() {
-    if(this.title === '' || this.title === undefined) {
+    if (this.title === '' || this.title === undefined) {
       Notify.warning('Please enter title');
       return;
     }
-    if (this.total_amount === 0 || this.total_amount === undefined) { 
+    if (this.total_amount === 0 || this.total_amount === undefined) {
       Notify.warning('Please enter total amount');
       return;
     }
-    if (this.paidby === '' || this.paidby === undefined) { 
+    if (this.paidby === '' || this.paidby === undefined) {
       Notify.warning('Please select paid by');
       return;
     }
-    if (this.selectedCategory === '' || this.selectedCategory === undefined) { 
+    if (this.selectedCategory === '' || this.selectedCategory === undefined) {
       Notify.warning('Please select a category');
       return;
     }
-    if (this.selectedShareType === '' || this.selectedShareType === undefined) { 
+    if (this.selectedShareType === '' || this.selectedShareType === undefined) {
       Notify.warning('Please select Split type');
       return;
     }
 
     let sharesList = [];
     this.enteredTotal = 0;
-    for (let i = 0; i < this.shares.length; i++) { 
+    for (let i = 0; i < this.shares.length; i++) {
       if (this.shares[i].isSelected) {
         this.enteredTotal = this.enteredTotal + this.shares[i].share;
         let obj = {
-          user: this.shares[i].user.uid,
+          uid: this.shares[i].user.uid,
+          uname: this.shares[i].user.fullName,
           share_amount: this.shares[i].share,
         };
         sharesList.push(obj);
       }
     }
 
-    if (this.enteredTotal !== this.total_amount) { 
+    if (this.enteredTotal !== this.total_amount) {
       Notify.warning('Total amount and split amounts does not match');
       return;
     }
 
-    
     this.newExpense = {
       eid: this.groupid + '_' + Date.now().toString(),
       title: this.title,
-      paidBy: this.paidby,
+      paidBy: {
+        uid: this.paidby,
+        uname: this.groupMembers.find((x) => x.uid === this.paidby)!.fullName,
+      },
       category: this.selectedCategory,
       group: this.groupid,
       expense_amount: this.total_amount,
-      expense_date: new Date(),
+      expense_date: new Date().toISOString(),
       isSettled: false,
       shares: sharesList,
     };
@@ -253,25 +261,54 @@ export class ExpenseslistComponent implements OnInit {
 
     this.expenseService.addExpenseWithId(this.newExpense);
     this.transactionService.addTransactions(transactions);
+    Notify.success('Expense added successfully');
     this.closeform();
   }
 
-  generateTransactions() : Transaction[] {
-    let transactions : Transaction[] = [];
+  generateTransactions(): Transaction[] {
+    let transactions: Transaction[] = [];
     for (let i = 0; i < this.shares.length; i++) {
       if (this.shares[i].isSelected) {
         let obj = {
           tid: this.newExpense.eid + '_' + i,
           title: this.newExpense.title,
           from: this.newExpense.paidBy,
-          to: this.shares[i].user.uid,
+          to: {
+            uid: this.shares[i].user.uid,
+            uname: this.shares[i].user.fullName,
+          },
           amount: this.shares[i].share,
           groupId: this.groupid,
-          date: new Date(),
+          date: this.newExpense.expense_date,
         };
         transactions.push(obj);
       }
     }
     return transactions;
+  }
+
+  currentUserExpenseSettlement(expense: Expense): number {
+    let curUid = this.userService.getCurrentUserIdOnly();
+    let paidByCurrentUser: boolean = expense.paidBy.uid === curUid;
+    if (paidByCurrentUser) {
+      return (
+        1 *
+        (expense.expense_amount -
+          expense.shares.find((x) => x.uid === curUid)!.share_amount)
+      );
+    } else {
+      return -1 * expense.shares.find((x) => x.uid === curUid)!.share_amount;
+    }
+  }
+
+  openExpenseDetails(expense : Expense) {
+    this.router2.navigate(['dashboard/expense-details', expense.eid]).then((e) => {
+      if (e) {
+        console.log(e);
+        console.log('routing successfull');
+      } else {
+        console.log('routing failed');
+      }
+    });
   }
 }

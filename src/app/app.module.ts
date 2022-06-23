@@ -65,6 +65,7 @@ import { firstValueFrom, isObservable, Observable } from 'rxjs';
 import { ExpenseslistComponent } from './components/expenseslist/expenseslist.component';
 import { AddexpenseComponent } from './components/addexpense/addexpense.component';
 import { ImageFallbackDirective } from './common/image-fallback.directive';
+import { ExpenseDetailsComponent } from './components/expense-details/expense-details.component';
 
 
 
@@ -91,6 +92,7 @@ import { ImageFallbackDirective } from './common/image-fallback.directive';
     ExpenseslistComponent,
     AddexpenseComponent,
     ImageFallbackDirective,
+    ExpenseDetailsComponent,
   ],
   imports: [
     BrowserModule,

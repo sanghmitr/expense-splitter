@@ -23,8 +23,14 @@ export class ExpenseService {
   addExpenseWithId(expense: Expense) { 
     this.db.collection('expenses').doc(expense.eid).set(expense).then(res => {
       console.log("Expense added ", res);
+    }, err => { 
+      console.log("Error adding expense ", err);
     })
   }
 
+  getExpenseById(eid: string) {
+    const expenseRef = doc(this.firestore, `expenses/${eid}`);
+    return docData(expenseRef, { idField: 'eid' }) as Observable<Expense>;
+  }
 
 }

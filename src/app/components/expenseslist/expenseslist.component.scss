@@ -59,6 +59,54 @@ width: 100%;
     height: auto;
 }
 
-mat-tab-group{
-    height: 1000px;
+:host ::ng-deep .mat-tab-body.mat-tab-body-active {
+  height: auto;
+
+}
+
+// .mat-card:not([class*=mat-elevation-z]) {
+//     box-shadow: 0 2px 1px -1px rgba(0,0,0,1), 
+//                 0 1px 1px 0 rgba(0,0,0,1), 
+//                 0 1px 3px 0 rgba(0,0,0,1);
+// }
+
+// .tab-container {
+//     box-shadow: 0px 0px 10px 0px #9b9b9b,
+//         0 1px 1px 0 #9b9b9b,
+//         0 1px 3px 0 #9b9b9b;
+// }
+
+.expense-list-item{
+    
+    box-shadow: 0px 0px 5px 0px #9b9b9b,
+        0 1px 1px 0 #9b9b9b,
+        0 1px 2px 0 #9b9b9b;
+    margin: 10px;
+
+}
+
+.expense-title{
+    font-size: 20px;
+    font-weight: bold;
+    background-color: #bfbcbc;
+}
+
+.totalAmount{
+    text-align: right;
+    color: black;
+    font-weight: bold;
+    font-size: 15px;
+}
+.willRecieve{
+    text-align: right;
+    font-size: 15px;
+    font-weight: bold;
+    color: rgb(19, 156, 19);
+}
+
+.willPay{
+    text-align: right;
+    font-size: 15px;
+    font-weight: bold;
+    color: rgb(190, 35, 35);
 }

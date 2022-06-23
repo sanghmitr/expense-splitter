@@ -1,5 +1,5 @@
 <br>
-<mat-card>
+<mat-card class="tab-container">
     <mat-tab-group>
     <mat-tab label="Expenses" class="expenses">
       <ng-template matTabContent>
@@ -145,25 +145,40 @@
           </form>
         </div>
         
+
         <!-- Expenses List will be shown here onwards -->
+        <br>
+        <br>
+
         <div>
-          <h1>Expenses List</h1>
-          <mat-list *ngFor="let expense of expensesList">
-            <mat-list-item>
-              <mat-card>
-                <h3>{{expense.title}}</h3>
-                <br>
-                <p>{{expense.expense_amount}}</p>
-                <br>
-                <p>{{expense.paidBy}}</p>
-                <br>
-                <p>{{expense.category}}</p>
-                <br>
+          <h1>Group Expenses</h1>
+          <mat-action-list>
+            <div *ngFor="let expense of expensesList">
+              <mat-card class="expense-list-item" (click) = "openExpenseDetails(expense)">
+                <div class="expense-title">
+                  <h2 matline> {{expense.title}}</h2>
+                </div>
+                
+                <div class="row">
+                  <div class="col">
+                    <p matLine> Paid By : {{expense.paidBy.uname}}</p>
+                    <p matline> Added at - {{expense.expense_date | date:'dd/MM/yyyy, h:mm a'}}</p>
+                  </div>
+                  <div class="col">
+                    <div class="float-right">
+                    <p matLine class="totalAmount"> Total: ₹{{expense.expense_amount}}</p>
+                    <p matline *ngIf="currentUserExpenseSettlement(expense) > 0" class="willRecieve"> you are owed by ₹{{currentUserExpenseSettlement(expense)}}</p>
+                    <p matline *ngIf="currentUserExpenseSettlement(expense) < 0" class="willPay"> you owes -₹{{currentUserExpenseSettlement(expense)* (-1)}} </p>
+                    </div>
+                  </div>
+                </div>
+          
               </mat-card>
-              
-            </mat-list-item>
-          </mat-list>
+              <mat-divider></mat-divider>
+            </div>
+          </mat-action-list>
         </div>
+        
       </ng-template>
     </mat-tab>
 

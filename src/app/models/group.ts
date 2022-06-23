@@ -6,5 +6,5 @@ export interface Group {
     description: string,
     members: string[],
     joinLink: string,
-    createdAt : Date,
+    createdAt : string,
 }

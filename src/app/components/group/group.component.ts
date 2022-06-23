@@ -29,7 +29,7 @@ export class GroupComponent implements OnInit {
     description: '',
     members: [],
     joinLink: '',
-    createdAt: new Date(),
+    createdAt: '',
   }
 
   //groups: Group[] = [];
@@ -190,7 +190,7 @@ export class GroupComponent implements OnInit {
     this.group.gid = this.group.title + currentTime.getTime().toString();
     this.group.gid = this.group.gid.replace(/ /g, '');
     this.group.joinLink = this.group.gid;
-    this.group.createdAt = new Date();
+    this.group.createdAt = new Date().toISOString();
     console.log("Group details are : ", this.group);
     
     this.groupService.createGroup(this.group);

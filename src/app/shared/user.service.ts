@@ -135,7 +135,7 @@ export class UserService implements Resolve<any>{
     if (item) {
       let localStorageuser = JSON.parse(item);
       let uid = localStorageuser.uid;
-      console.log("Local storage uid is : ", uid);
+      //console.log("Local storage uid is : ", uid);
       return uid;
     }
     else

@@ -15,49 +15,56 @@ import { GroupDetailsResolve } from './components/group-details/group-details.re
 import { GrouplistResolverGuard } from './guards/grouplist-resolver.guard';
 import { PathNotFoundComponent } from './components/path-not-found/path-not-found.component';
 import { AddexpenseComponent } from './components/addexpense/addexpense.component';
+import { ExpenseDetailsComponent } from './components/expense-details/expense-details.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   {
-    path: 'dashboard', component: DashboardComponent,
+    path: 'dashboard',
+    component: DashboardComponent,
     resolve: {
-      data : UserService
+      data: UserService,
     },
     children: [
       {
-        path: 'profile', component: ProfileComponent,
+        path: 'profile',
+        component: ProfileComponent,
         resolve: {
-          data : UserService
-        }
+          data: UserService,
+        },
       },
       {
-        path: 'groups', component: GroupComponent,
+        path: 'groups',
+        component: GroupComponent,
         // resolve: {
         //   data : GrouplistResolverGuard
         // }
-        children: [
-          
-        ]
+        children: [],
       },
       {
-        path: 'groupdetails/:id', component: GroupDetailsComponent,
+        path: 'groupdetails/:id',
+        component: GroupDetailsComponent,
         // pathMatch : 'full',
         // resolve: {
         //   groupdata : GroupDetailsResolve
         // }
       },
       {
-        path: 'api-testing', component : ApiTestingComponent
-      }
-    ]
+        path: 'expense-details/:id',
+        component: ExpenseDetailsComponent
+      },
+      {
+        path: 'api-testing',
+        component: ApiTestingComponent,
+      },
+    ],
   },
-  
+
   { path: 'verify-email', component: VerifyEmailComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
-  { path : "**", component : PathNotFoundComponent },
-
+  { path: '**', component: PathNotFoundComponent },
 ];
 
 @NgModule({

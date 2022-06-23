@@ -21,7 +21,7 @@ export class GroupDetailsComponent implements OnInit {
     description: '',
     members: [],
     joinLink: '',
-    createdAt: new Date(),
+    createdAt: '',
   };
   
   createdDate: string = '';
