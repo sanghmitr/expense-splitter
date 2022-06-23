@@ -12,6 +12,7 @@ import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import { Transaction } from '../../models/transactions';
 import { ExpenseService } from '../../shared/expense.service';
 import { TransactionService } from '../../shared/transaction.service';
+import { splitwise } from '../../utils/split';
 
 
 @Component({
@@ -20,6 +21,7 @@ import { TransactionService } from '../../shared/transaction.service';
   styleUrls: ['./expenseslist.component.scss'],
 })
 export class ExpenseslistComponent implements OnInit {
+  curuser = '';
   addbuttonClicked: boolean = false;
   groupid: string = '';
   groupDetails!: Group;
@@ -45,6 +47,9 @@ export class ExpenseslistComponent implements OnInit {
 
   expensesList: Expense[] = [];
 
+  allTransactions: Transaction[] = [];
+  newTransactionsList: any[] = [];
+  simplifiedTransactions: any[] = [];
   constructor(
     private router: ActivatedRoute,
     private router2: Router,
@@ -87,11 +92,23 @@ export class ExpenseslistComponent implements OnInit {
       .subscribe((res: Expense[]) => {
         this.expensesList = res.sort((a, b) => {
           return (
-            new Date(b.expense_date).getTime() - new Date(a.expense_date).getTime()
+            new Date(b.expense_date).getTime() -
+            new Date(a.expense_date).getTime()
           );
         });
         console.log('Expenses List : ', this.expensesList);
       });
+
+    //Fetch All Transactions of this group
+    this.transactionService
+      .getAllTransactionsOfGroup(this.groupid)
+      .subscribe((res: any) => {
+        this.allTransactions = res;
+        this.prepareTransactionsList();
+        console.log('All Transactions : ', this.allTransactions);
+      });
+
+    this.curuser = this.userService.getCurrentUserIdOnly();
   }
 
   addExpense() {
@@ -301,14 +318,44 @@ export class ExpenseslistComponent implements OnInit {
     }
   }
 
-  openExpenseDetails(expense : Expense) {
-    this.router2.navigate(['dashboard/expense-details', expense.eid]).then((e) => {
-      if (e) {
-        console.log(e);
-        console.log('routing successfull');
-      } else {
-        console.log('routing failed');
-      }
-    });
+  isCurrentUserInvolved(expense : Expense) : boolean {
+    return expense.shares.find((x) => x.uid === this.curuser) !== undefined;
+  }
+  
+  openExpenseDetails(expense: Expense) {
+    this.router2
+      .navigate(['dashboard/expense-details', expense.eid])
+      .then((e) => {
+        if (e) {
+          console.log(e);
+          console.log('routing successfull');
+        } else {
+          console.log('routing failed');
+        }
+      });
+  }
+
+  prepareTransactionsList() {
+    for (let i = 0; i < this.allTransactions.length; i++) {
+      let fromUser = this.allTransactions[i].from.uname;
+      let toUser = this.allTransactions[i].to.uname;
+      let amount = this.allTransactions[i].amount;
+
+      let obj = {
+        person1: fromUser,
+        person2: toUser,
+        amount: amount,
+      };
+      this.newTransactionsList.push(obj);
+    }
+  }
+
+  showSettlements = false;
+  simplifySettlements() {
+    console.log('new transactions : ', this.newTransactionsList);
+    let res = splitwise(this.newTransactionsList);
+    this.simplifiedTransactions = res;
+    this.showSettlements = true;
+    console.log('Simplified Settlements : ', res);
   }
 }

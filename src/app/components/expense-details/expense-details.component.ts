@@ -15,8 +15,8 @@ import { ShareDescriptor } from '../../models/expense';
 export class ExpenseDetailsComponent implements OnInit {
   expense!: Expense;
   curUserId = '';
-  isPaidByCurrentUser : boolean = false;
-  sharesList : ShareDescriptor[] = [];
+  isPaidByCurrentUser: boolean = false;
+  sharesList: ShareDescriptor[] = [];
   currentUserShare: number = 0;
   constructor(
     private router: ActivatedRoute,
@@ -27,14 +27,15 @@ export class ExpenseDetailsComponent implements OnInit {
 
   ngOnInit() {
     let eid = this.router.snapshot.params['id'];
-    this.expenseService.getExpenseById(eid).subscribe((expense) => { 
+    this.expenseService.getExpenseById(eid).subscribe((expense) => {
       this.expense = expense;
       this.sharesList = expense.shares;
       this.curUserId = this.userService.getCurrentUserIdOnly();
       this.isPaidByCurrentUser = expense.paidBy.uid === this.curUserId;
-      this.currentUserShare = this.expense.shares.find((x) => x.uid === this.curUserId)!.share_amount;
+      this.currentUserShare = this.expense.shares.find(
+        (x) => x.uid === this.curUserId
+      )!.share_amount;
     });
-    
   }
 
   currentUserExpenseSettlement(expense: Expense): number {
@@ -49,5 +50,9 @@ export class ExpenseDetailsComponent implements OnInit {
     } else {
       return -1 * expense.shares.find((x) => x.uid === curUid)!.share_amount;
     }
+  }
+
+  isCurrentUserInvolved(expense : Expense) {
+      return expense.shares.find((x) => x.uid === this.curUserId) !== undefined;
   }
 }

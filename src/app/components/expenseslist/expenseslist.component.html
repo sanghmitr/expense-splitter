@@ -167,8 +167,10 @@
                   <div class="col">
                     <div class="float-right">
                     <p matLine class="totalAmount"> Total: ₹{{expense.expense_amount}}</p>
-                    <p matline *ngIf="currentUserExpenseSettlement(expense) > 0" class="willRecieve"> you are owed by ₹{{currentUserExpenseSettlement(expense)}}</p>
-                    <p matline *ngIf="currentUserExpenseSettlement(expense) < 0" class="willPay"> you owes -₹{{currentUserExpenseSettlement(expense)* (-1)}} </p>
+                    <div *ngIf="isCurrentUserInvolved(expense)">
+                      <p matline *ngIf="currentUserExpenseSettlement(expense) > 0" class="willRecieve"> you are owed by ₹{{currentUserExpenseSettlement(expense)}}</p>
+                      <p matline *ngIf="currentUserExpenseSettlement(expense) < 0" class="willPay"> you owes -₹{{currentUserExpenseSettlement(expense)* (-1)}} </p>
+                    </div>
                     </div>
                   </div>
                 </div>
@@ -185,11 +187,25 @@
 
     <mat-tab label="Settlements" class="settlements">
       <ng-template matTabContent>
-        Content 2 
+        <button style = "margin: 10px;" class="btn btn-primary" (click) = "simplifySettlements()"> Simplify </button>
+        
+        <div *ngIf="showSettlements == true">
+          <mat-list *ngFor="let settlement of simplifiedTransactions">
+            <mat-card class="expense-list-item">
+              <mat-list-item>
+                <p matline> {{settlement.person1}} ---> {{settlement.amount}} ----> {{settlement.person2}} </p>
+              </mat-list-item>
+            </mat-card>
+        
+          </mat-list>
+        </div>
+
       </ng-template>
+
+      
+      
     </mat-tab>
 
-    
   </mat-tab-group>
 </mat-card>
 

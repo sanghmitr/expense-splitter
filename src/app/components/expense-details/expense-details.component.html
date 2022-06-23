@@ -14,11 +14,15 @@
             <div class="float-right">
                 <p matLine class="totalAmount"> Total: ₹{{expense.expense_amount}}</p>
                 <p matline class="totalAmount"> Your Share : {{currentUserShare}}</p>
-                <p matline *ngIf="currentUserExpenseSettlement(expense) > 0" class="willRecieve"> you are owed by
+
+                <div *ngIf="isCurrentUserInvolved(expense)">
+                    <p matline *ngIf="currentUserExpenseSettlement(expense) > 0" class="willRecieve"> you are owed by
                     ₹{{currentUserExpenseSettlement(expense)}}</p>
-                <p matline *ngIf="currentUserExpenseSettlement(expense) < 0" class="willPay"> you owes
-                    ₹{{currentUserExpenseSettlement(expense)* (-1)}} 
-                </p>
+                    <p matline *ngIf="currentUserExpenseSettlement(expense) < 0" class="willPay"> you owes
+                        ₹{{currentUserExpenseSettlement(expense)* (-1)}} 
+                    </p>
+                </div>
+                
                 <!-- <p *ngIf="!isPaidByCurrentUser" style = "text-align: right;"> to {{expense.paidBy.uname}} </p> -->
             </div>
         </div>

@@ -6,6 +6,7 @@ import {
  doc, docData, deleteDoc, updateDoc, DocumentReference, setDoc, FieldValue, arrayUnion
 } from '@angular/fire/firestore';
 import { Transaction } from '../models/transactions';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -29,5 +30,12 @@ export class TransactionService {
       })
     }
     )
+  }
+
+  //Get all transactions of a group
+  getAllTransactionsOfGroup(groupid: string) : any{ 
+    return this.db
+      .collection('transactions', (ref) => ref.where('groupId', '==', groupid))
+      .valueChanges();
   }
 }
