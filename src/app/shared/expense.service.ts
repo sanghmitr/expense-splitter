@@ -22,7 +22,7 @@ export class ExpenseService {
   //Add new expense
   addExpenseWithId(expense: Expense) { 
     this.db.collection('expenses').doc(expense.eid).set(expense).then(res => {
-      console.log("Expense added ", res);
+      //console.log("Expense added ", res);
     }, err => { 
       console.log("Error adding expense ", err);
     })

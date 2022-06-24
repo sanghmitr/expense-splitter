@@ -11,7 +11,7 @@ export class MemberslistComponent implements OnInit {
   @Input() members: User[] = [];
   
   constructor() {
-    console.log("Memberslist component : ", this.members);
+    //console.log("Memberslist component : ", this.members);
    }
 
   ngOnInit(): void {

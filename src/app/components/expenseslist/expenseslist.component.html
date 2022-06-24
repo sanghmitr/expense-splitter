@@ -1,14 +1,14 @@
 <br>
 <mat-card class="tab-container">
-    <mat-tab-group>
+    <mat-tab-group (selectedTabChange)="tabClick($event)">
     <mat-tab label="Expenses" class="expenses">
       <ng-template matTabContent>
         <br>
-        <button #addbutton class="btn btn-success" (click) = "addExpense()">
+        <button class="btn btn-success addbutton" (click) = "addExpense()">
           Add Expense
         </button>
         
-        <div *ngIf="addbuttonClicked">
+        <div *ngIf="addbuttonClicked" class="expense_add_form">
           <form>
 
             <mat-form-field class="example-full-width" appearance="fill">
@@ -30,7 +30,7 @@
                   </mat-option>
               </mat-select>
             </mat-form-field>
-            <p>You selected: {{paidby}}</p>
+            <!-- <p>You selected: {{paidby}}</p> -->
 
 
             <mat-form-field appearance="fill" class="example-full-width">
@@ -41,7 +41,7 @@
                   </mat-option>
               </mat-select>
             </mat-form-field>
-            <p>You selected: {{selectedCategory}}</p>
+            <!-- <p>You selected: {{selectedCategory}}</p> -->
             
 
             <label id="example-radio-group-label">How do you want to distribute?</label>
@@ -61,7 +61,7 @@
               </mat-radio-button>
             </mat-radio-group>
 
-              <div>Your share type is : {{selectedShareType}}</div>
+              <!-- <div>Your share type is : {{selectedShareType}}</div> -->
               <div *ngIf="selectedShareType === 'Exact'">
                 <p class="amountremaining" *ngIf="(total_amount - enteredTotal) > 0">
                   Remaining Amount : -{{total_amount - enteredTotal}}
@@ -134,14 +134,14 @@
           
 
 
-            <div>
+            <!-- <div>
               <mat-list *ngFor="let share of shares">
                 <p>{{share.user.fullName}} : {{share.share}}</p>
               </mat-list>
-            </div>
+            </div> -->
 
-            <button type="reset" class = "btn btn-secondary" (click) = "closeform()"> close</button>
-            <button type="submit" class="btn btn-success" (click)="submitForm()"> Submit</button>
+            <button type="reset" class = "btn btn-secondary float-right" (click) = "closeform()"> close</button>
+            <button type="submit" class="btn btn-success float-right" (click) = "submitForm()"> Submit</button>
           </form>
         </div>
         
@@ -149,9 +149,11 @@
         <!-- Expenses List will be shown here onwards -->
         <br>
         <br>
+        <!-- <mat-divider> </mat-divider> -->
 
-        <div>
-          <h1>Group Expenses</h1>
+
+        <div class="expenselist_section">
+          <!-- <h1>Group Expenses</h1> -->
           <mat-action-list>
             <div *ngFor="let expense of expensesList">
               <mat-card class="expense-list-item" (click) = "openExpenseDetails(expense)">
@@ -184,19 +186,87 @@
       </ng-template>
     </mat-tab>
 
-
+    <!------------------- Settlements Tab --------------------------->
     <mat-tab label="Settlements" class="settlements">
       <ng-template matTabContent>
-        <button style = "margin: 10px;" class="btn btn-primary" (click) = "simplifySettlements()"> Simplify </button>
+        <!-- <div class="container">
+          <button style = "margin: 10px;" class="btn btn-success" (click) = "simplifySettlements()"> Simplify </button>
+        </div> -->
         
+        <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="15px" class="stats-cards">
+        
+          <mat-card class="stat-card" fxFlex="33">
+            <div class="text">
+              <h4 class="mat-h4">Group Expenditure</h4>
+        
+              <br>
+              <span class="total">₹{{totalGroupExpenditure}}</span>
+            </div>
+          </mat-card>
+        
+          <mat-card class="stat-card" fxFlex="33">
+            <div class="text">
+              <h4 class="mat-h4">Your Expenditure</h4>
+        
+              <br>
+              <span class="total">₹{{currentUserExpenditure}}</span>
+            </div>
+          </mat-card>
+          
+          <mat-card *ngIf="currentUserSimplifiedExpenditure >= 0" class="stat-card-receive" fxFlex="33">
+            <div class="text">
+              <h4 class="mat-h4">You Will Receive</h4>
+          
+              <br>
+              <span class="total">₹{{currentUserSimplifiedExpenditure}}</span>
+            </div>
+          </mat-card>
+
+          <mat-card *ngIf="currentUserSimplifiedExpenditure < 0"class="stat-card-pay" fxFlex="33">
+            <div class="text">
+              <h4 class="mat-h4">You need to pay</h4>
+        
+              <br>
+              <span class="total">₹{{currentUserSimplifiedExpenditure * -1}}</span>
+            </div>
+          </mat-card>
+        
+          <!-- <mat-card fxFlex="20">
+            <div class="text">
+              <h4 class="mat-h4">Idle Users</h4>
+        
+              <br>
+              <span class="total">12</span>
+            </div>
+          </mat-card> -->
+        
+        
+        </div>
+
         <div *ngIf="showSettlements == true">
           <mat-list *ngFor="let settlement of simplifiedTransactions">
-            <mat-card class="expense-list-item">
+
+            <mat-card *ngIf= "(settlement.from_uid !== curuser) && (settlement.to_uid !== curuser)" class="notInvolved">
               <mat-list-item>
-                <p matline> {{settlement.person1}} ---> {{settlement.amount}} ----> {{settlement.person2}} </p>
+                <p matline> {{settlement.from_name}} will pay ₹{{settlement.amount}} to {{settlement.to_name}} </p>
               </mat-list-item>
             </mat-card>
-        
+
+            <!-- Need to Pay -->
+            <mat-card *ngIf = "(settlement.from_uid === curuser) && (settlement.to_uid !== curuser)" class="havetopay">
+              <mat-list-item>
+                <p matline> You need to pay ₹{{settlement.amount}} to {{settlement.to_name}} </p>
+              </mat-list-item>
+            </mat-card>
+
+            <mat-card *ngIf= "(settlement.from_uid !== curuser) && (settlement.to_uid === curuser)" class="willget">
+              <mat-list-item>
+                <p matline> {{settlement.from_name}} will pay ₹{{settlement.amount}} to you </p>
+              </mat-list-item>
+            </mat-card>
+
+            
+
           </mat-list>
         </div>
 
@@ -205,7 +275,6 @@
       
       
     </mat-tab>
-
   </mat-tab-group>
 </mat-card>
 

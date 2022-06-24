@@ -48,7 +48,7 @@ export class GroupDetailsComponent implements OnInit {
     const p = this.groupService.getGroupById(gid);
     await this.appModule.waitFor(p).then(res => { 
       this.group = res;
-      console.log("Group Details : ", this.group);
+      //console.log("Group Details : ", this.group);
     });
 
     // this.createdDate = this.group.createdAt.toDateString();

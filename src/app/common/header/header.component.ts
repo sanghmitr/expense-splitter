@@ -30,7 +30,7 @@ export class HeaderComponent implements OnInit {
   }
 
   toggleSideBar() {
-    console.log("toggleSideBar Clicked!");
+    //console.log("toggleSideBar Clicked!");
     this.toggleSideBarForMe.emit();
     setTimeout(() => {
       window.dispatchEvent(

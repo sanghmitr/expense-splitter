@@ -33,7 +33,7 @@ export class DashboardComponent implements OnInit {
       this.router.navigate(['/login']);
     }
     this.getUser().then(() => {
-      console.log("Inside Dashboard Oninit : ", this.currentUser);
+      //console.log("Inside Dashboard Oninit : ", this.currentUser);
     }); 
   }
 
@@ -50,7 +50,7 @@ export class DashboardComponent implements OnInit {
     const auth = getAuth();
     const user = auth.currentUser;
 
-    console.log(user);
+    //console.log(user);
   }
 
   async getUser() {

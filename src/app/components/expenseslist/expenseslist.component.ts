@@ -22,6 +22,7 @@ import { splitwise } from '../../utils/split';
 })
 export class ExpenseslistComponent implements OnInit {
   curuser = '';
+  curusername = '';
   addbuttonClicked: boolean = false;
   groupid: string = '';
   groupDetails!: Group;
@@ -50,6 +51,10 @@ export class ExpenseslistComponent implements OnInit {
   allTransactions: Transaction[] = [];
   newTransactionsList: any[] = [];
   simplifiedTransactions: any[] = [];
+  totalGroupExpenditure: number = 0;
+  currentUserExpenditure: number = 0;
+  currentUserSimplifiedExpenditure: number = 0;
+
   constructor(
     private router: ActivatedRoute,
     private router2: Router,
@@ -60,12 +65,13 @@ export class ExpenseslistComponent implements OnInit {
     private transactionService: TransactionService
   ) {}
 
+  ////////////////////////////////////////////////////////////////////////////////
   async ngOnInit() {
     this.groupid = this.router.snapshot.params['id'];
     let p = this.groupService.getGroupById(this.groupid);
     await this.appModule.waitFor(p).then((res) => {
       this.group = res;
-      console.log('Group Details inside expenselist : ', this.group);
+      //console.log('Group Details inside expenselist : ', this.group);
     });
 
     //Get all group Member details
@@ -96,7 +102,7 @@ export class ExpenseslistComponent implements OnInit {
             new Date(a.expense_date).getTime()
           );
         });
-        console.log('Expenses List : ', this.expensesList);
+        //console.log('Expenses List : ', this.expensesList);
       });
 
     //Fetch All Transactions of this group
@@ -105,11 +111,13 @@ export class ExpenseslistComponent implements OnInit {
       .subscribe((res: any) => {
         this.allTransactions = res;
         this.prepareTransactionsList();
-        console.log('All Transactions : ', this.allTransactions);
+        //console.log('All Transactions : ', this.allTransactions);
       });
 
     this.curuser = this.userService.getCurrentUserIdOnly();
+    this.curusername = this.userService.getCurrentUserNameOnly();
   }
+  ///////////////////////////////////////////////////////////////////////////////
 
   addExpense() {
     this.addbuttonClicked = true;
@@ -117,7 +125,7 @@ export class ExpenseslistComponent implements OnInit {
 
   onListSelectionChange($event: any) {
     //console.log($event);
-    console.log('Selected users array : ', this.selectedShares);
+    //console.log('Selected users array : ', this.selectedShares);
 
     for (let i = 0; i < this.shares.length; i++) {
       if (
@@ -272,9 +280,9 @@ export class ExpenseslistComponent implements OnInit {
       shares: sharesList,
     };
 
-    console.log('New Expense : ', this.newExpense);
+    //console.log('New Expense : ', this.newExpense);
     let transactions = this.generateTransactions();
-    console.log('Transactions : ', transactions);
+    //console.log('Transactions : ', transactions);
 
     this.expenseService.addExpenseWithId(this.newExpense);
     this.transactionService.addTransactions(transactions);
@@ -318,16 +326,16 @@ export class ExpenseslistComponent implements OnInit {
     }
   }
 
-  isCurrentUserInvolved(expense : Expense) : boolean {
+  isCurrentUserInvolved(expense: Expense): boolean {
     return expense.shares.find((x) => x.uid === this.curuser) !== undefined;
   }
-  
+
   openExpenseDetails(expense: Expense) {
     this.router2
       .navigate(['dashboard/expense-details', expense.eid])
       .then((e) => {
         if (e) {
-          console.log(e);
+          //console.log(e);
           console.log('routing successfull');
         } else {
           console.log('routing failed');
@@ -336,9 +344,10 @@ export class ExpenseslistComponent implements OnInit {
   }
 
   prepareTransactionsList() {
+    this.newTransactionsList.splice(0);
     for (let i = 0; i < this.allTransactions.length; i++) {
-      let fromUser = this.allTransactions[i].from.uname;
-      let toUser = this.allTransactions[i].to.uname;
+      let fromUser = this.allTransactions[i].from.uid;
+      let toUser = this.allTransactions[i].to.uid;
       let amount = this.allTransactions[i].amount;
 
       let obj = {
@@ -352,10 +361,70 @@ export class ExpenseslistComponent implements OnInit {
 
   showSettlements = false;
   simplifySettlements() {
-    console.log('new transactions : ', this.newTransactionsList);
+    //console.log('new transactions : ', this.newTransactionsList);
     let res = splitwise(this.newTransactionsList);
-    this.simplifiedTransactions = res;
+    this.simplifiedTransactions.splice(0);
+    for (let i = 0; i < res.length; i++) { 
+      let from = this.groupMembers.find((x) => x.uid === res[i].person1)!.fullName;
+      let to = this.groupMembers.find((x) => x.uid === res[i].person2)!.fullName;
+      let amount = res[i].amount;
+
+      let obj = {
+        from_name: from,
+        from_uid: res[i].person1,
+        to_name: to,
+        to_uid: res[i].person2,
+        amount: amount,
+      }
+      this.simplifiedTransactions.push(obj);
+    }
+    
     this.showSettlements = true;
-    console.log('Simplified Settlements : ', res);
+    //console.log('Simplified Settlements : ', res);
+  }
+
+  getGroupExpenditure(): number {
+    let amount = 0;
+    for (let i = 0; i < this.expensesList.length; i++) {
+      amount = amount + this.expensesList[i].expense_amount;
+    }
+    return amount;
+  }
+
+  getPersonalExpenditure(): number {
+    let amount = 0;
+    for (let i = 0; i < this.expensesList.length; i++) {
+      let x = this.expensesList[i].shares.find((x) => x.uid === this.curuser);
+      if (x !== undefined) {
+        amount = amount + x.share_amount;
+      }
+    }
+    return amount;
+  }
+
+  getCurrentUserSettledAmount(): number { 
+    let amount = 0;
+    for (let i = 0; i < this.simplifiedTransactions.length; i++) {
+      if (this.simplifiedTransactions[i].from_uid === this.curuser) {
+        amount = amount - this.simplifiedTransactions[i].amount;
+      }
+      else if(this.simplifiedTransactions[i].to_uid === this.curuser) {
+        amount = amount + this.simplifiedTransactions[i].amount;
+      }
+    }
+    return amount;
+  }
+
+  tabClick($event: any) {
+    // console.log('Tab clicked : ', $event.index);
+    if ($event.index === 1) {
+      this.simplifySettlements();
+      this.totalGroupExpenditure = this.getGroupExpenditure();
+      this.currentUserExpenditure = this.getPersonalExpenditure();
+      this.currentUserSimplifiedExpenditure = this.getCurrentUserSettledAmount();
+      //console.log('Total Group Expenditure : ', this.totalGroupExpenditure);
+      //console.log('Current user expenditure : ', this.currentUserExpenditure);
+      //console.log('Current user simplified expenditure : ', this.currentUserSimplifiedExpenditure);
+    }
   }
 }

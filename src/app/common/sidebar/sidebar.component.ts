@@ -19,7 +19,7 @@ export class SidebarComponent implements OnInit {
       let data = routeData['data'];
       if (data) {
         this.currentUser = data;
-        console.log(this.currentUser);
+        //console.log(this.currentUser);
       }
     });
   }

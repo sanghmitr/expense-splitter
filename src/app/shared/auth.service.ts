@@ -58,7 +58,7 @@ export class AuthService {
     this.fireauth.createUserWithEmailAndPassword(email, password)
       .then(res => {
         this.sendEmailVerification(res.user);
-        console.log(res.user);
+        //console.log(res.user);
         if (res.user) {
           this.userobj.uid = res.user.uid;
           this.userobj.email = res.user.email == null ? '' : res.user.email.toLowerCase();
@@ -96,12 +96,12 @@ export class AuthService {
   //create user in firestore, If already exists merge data
   createUser(user: User) { 
     this.firestore.collection('users').doc(user.uid).set(user).then(res => {
-      console.log(res);
+      //console.log(res);
     })
 
     // Add Email Mapping in firestore
     this.firestore.collection('email-mappings').doc(user.email).set({ uid : user.uid }).then(res => {
-      console.log("Email mapping added",res);
+      //console.log("Email mapping added",res);
     })
   }
 
@@ -150,8 +150,8 @@ export class AuthService {
     this.fireauth.signInWithPopup(new GoogleAuthProvider()).then(res => {
       this.router.navigate(['dashboard']);
       localStorage.setItem('Token', JSON.stringify(res.user));
-      console.log("login using google-sign in ", res.user);
-      console.log(res);
+      //console.log("login using google-sign in ", res.user);
+      //console.log(res);
 
       if (res.additionalUserInfo?.isNewUser == true)
       {

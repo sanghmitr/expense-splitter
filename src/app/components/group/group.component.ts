@@ -176,7 +176,7 @@ export class GroupComponent implements OnInit {
     for (let i = 0; i < value.members.length; i++) { 
       await this.userService.getUserId(value.members[i].memberEmail).then(res => { 
         this.group.members.push(res.docs[0].id);
-        console.log("user id added : ", res.docs[0].id);
+        //console.log("user id added : ", res.docs[0].id);
       });
     }
 
@@ -191,14 +191,14 @@ export class GroupComponent implements OnInit {
     this.group.gid = this.group.gid.replace(/ /g, '');
     this.group.joinLink = this.group.gid;
     this.group.createdAt = new Date().toISOString();
-    console.log("Group details are : ", this.group);
+    //console.log("Group details are : ", this.group);
     
     this.groupService.createGroup(this.group);
     this.groups.push(this.group);
 
     for (let i = 0; i < this.group.members.length; i++) { 
       this.groupService.addGroupIdToUser(this.group.members[i], this.group.gid).then(res => { 
-        console.log("Group id added to user : ", res);
+        //console.log("Group id added to user : ", res);
       });
     }
     

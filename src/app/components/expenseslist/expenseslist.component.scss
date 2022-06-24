@@ -1,4 +1,4 @@
-#addbutton{
+.addbutton{
     margin: 10px;
 }
 
@@ -109,4 +109,80 @@ width: 100%;
     font-size: 15px;
     font-weight: bold;
     color: rgb(190, 35, 35);
+}
+
+.container {
+  position: relative;
+}
+
+
+
+// Stat-cards css
+.stats-cards {
+  .mat-card {
+    margin-top: 10px;
+    overflow: hidden;
+  }
+}
+
+table {
+  width: 100%;
+}
+
+//for cards
+h4 {
+  margin-top: 0;
+  font-family: Gordita_Medium;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.total {
+  font-size: 1.5em;
+  font-weight: 500;
+}
+
+.mat-icon,
+.description {
+  color: green;
+  font-size: 1.4em;
+}
+
+.mat-icon {
+  position: relative;
+  padding: 0 20px;
+  top: 5px;
+}
+
+.stat-card{
+    background-color: #e1e1e1;
+}
+
+.stat-card-pay{
+    background-color: #f4b0b0;
+}
+
+.stat-card-receive{
+    background-color: #c0f4b0;
+}
+
+.havetopay{
+    background-color: #f4b0b0;
+}
+
+.willget{
+    background-color: #c0f4b0;
+}
+
+.notInvolved{
+    background-color: #fff;
+}
+
+.expense_add_form{
+    margin: 10px;
+    height: auto;
+}
+
+.expenselist_section{
+    clear: both;
 }

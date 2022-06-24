@@ -1,7 +1,7 @@
 <div class="container">
     <div class="card flex-row flex-wrap">
         <div class="card-header border-0">
-            <img src="" alt="user_photo">
+            <img [src] ="currentUser.photoURL" alt="user_photo" ImageFallbackDirective>
         </div>
         <div class="card-block px-2">
             <h1 class="card-title">{{ currentUser.fullName }}</h1>

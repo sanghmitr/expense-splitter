@@ -24,7 +24,7 @@ export class GrouplistComponent implements OnInit, OnDestroy, OnChanges {
     //    this.groups = res;
     //  });
      
-    console.log("Grouplist component : ", this.groups);
+    //console.log("Grouplist component : ", this.groups);
   }
 
   ngOnChanges(changes: SimpleChanges) { 
@@ -46,7 +46,7 @@ export class GrouplistComponent implements OnInit, OnDestroy, OnChanges {
   openGroupDeails(group: Group) {
     this.router.navigate(['dashboard/groupdetails', group.gid]).then((e) => { 
       if (e) {
-        console.log(e);
+        //console.log(e);
         console.log("routing successfull");
       }
       else {
