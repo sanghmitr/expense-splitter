@@ -42,7 +42,7 @@ function downheapify(heap : any, idx : number) {
   downheapify(heap, largest);
 }
 
-function push_heap(heap : any, key : any, val : any) {
+function push_heap(heap : any, key : number, val : string) {
   var ob = { first: key, second: val };
   heap.push(ob);
   upheapify(heap, heap.length - 1);
@@ -70,7 +70,7 @@ export function splitwise(transactions: any) {
   // transactions array will store an object of expense class
   let net_balance : any = {}; // hashmap or also called as object in js
   for (var i = 0; i < transactions.length; i++) {
-    var e = transactions[i]; // e is an object of expense class
+    let e = transactions[i]; // e is an object of expense class
 
     // person1 is the payer so under a credit
     // person2 is the payee so under a debit
